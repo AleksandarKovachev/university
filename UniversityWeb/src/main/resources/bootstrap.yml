@@ -1,0 +1,18 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: web-app
+  cloud:
+    consul:
+      config:
+        enabled: true
+        prefix: configuration
+        defaultContext: shared
+        format: PROPERTIES
+      discovery:
+        prefer-ip-address: true
+  thymeleaf:
+    cache: false
+  template:
+    cache: false

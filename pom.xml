@@ -8,5 +8,6 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>UniversityGateway</module>
+		<module>UniversityWeb</module>
 	</modules>
 </project>
