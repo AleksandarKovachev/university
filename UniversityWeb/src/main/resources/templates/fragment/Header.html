@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.thymeleaf.org http://www.thymeleaf.org">
+
+<div th:fragment="header">
+	<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
+		<a class="navbar-brand" th:href="@{/}" th:text="#{logo}"></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navBar" aria-controls="navBar" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navBar">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link" href="#" th:text="#{menu.login}"></a>
+			</div>
+		</div>
+	</nav>
+</div>
+</html>
