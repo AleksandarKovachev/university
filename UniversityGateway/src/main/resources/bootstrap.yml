@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    consul:
+      config:
+        enabled: true
+        prefix: configuration
+        defaultContext: shared
+        format: PROPERTIES
+      discovery:
+        prefer-ip-address: true
+server:
+  port: 9090
+zuul:
+  ignoredServices: '*'
+  sensitiveHeaders: Cookie, Set-Cookie
+  add-proxy-headers: true
