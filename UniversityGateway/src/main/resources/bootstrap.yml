@@ -16,3 +16,8 @@ zuul:
   ignoredServices: '*'
   sensitiveHeaders: Cookie, Set-Cookie
   add-proxy-headers: true
+  routes:
+    course-service:
+      path: /course/**
+      stripPrefix: false
+      serviceId: course-service

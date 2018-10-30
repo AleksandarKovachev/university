@@ -1,0 +1,14 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: course-service
+  cloud:
+    consul:
+      config:
+        enabled: true
+        prefix: configuration
+        defaultContext: shared
+        format: PROPERTIES
+      discovery:
+        prefer-ip-address: true

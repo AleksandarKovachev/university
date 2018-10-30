@@ -9,5 +9,6 @@
 	<modules>
 		<module>UniversityGateway</module>
 		<module>UniversityWeb</module>
+		<module>UniversityCourse</module>
 	</modules>
 </project>
