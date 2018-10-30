@@ -1,8 +1,18 @@
 server:
-  port: 8090
+  port: 8091
 spring:
   application:
     name: course-service
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/university_course
+    username: root
+    password: root
+  jpa:
+    database: mysql
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
   cloud:
     consul:
       config:
