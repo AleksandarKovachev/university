@@ -10,5 +10,6 @@
 		<module>UniversityGateway</module>
 		<module>UniversityWeb</module>
 		<module>UniversityCourse</module>
+		<module>UniversityAccount</module>
 	</modules>
 </project>

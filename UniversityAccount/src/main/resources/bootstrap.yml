@@ -1,0 +1,24 @@
+server:
+  port: 8092
+spring:
+  application:
+    name: account-service
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/university_account
+    username: root
+    password: root
+  jpa:
+    database: mysql
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+  cloud:
+    consul:
+      config:
+        enabled: true
+        prefix: configuration
+        defaultContext: shared
+        format: PROPERTIES
+      discovery:
+        prefer-ip-address: true
