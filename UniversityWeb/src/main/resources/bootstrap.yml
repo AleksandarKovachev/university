@@ -16,3 +16,11 @@ spring:
     cache: false
   template:
     cache: false
+zuul:
+  routes:
+    api-gateway:
+      sensitiveHeaders: Cookie,Set-Cookie
+      path: /api/**
+      stripPrefix: false
+      serviceId: api-gateway
+  add-proxy-headers: true

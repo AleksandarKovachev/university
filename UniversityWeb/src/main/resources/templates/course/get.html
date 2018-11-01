@@ -7,6 +7,59 @@
 <title th:text="#{menu.courses}"></title>
 </head>
 <body>
-	<section layout:fragment="body"></section>
+	<section layout:fragment="body">
+
+		<div class="container mt-5">
+			<form th:action="@{/course/get}" method="POST" th:object="${filter}">
+				<div class="form-row align-items-center">
+					<div class="col">
+						<input type="text" class="form-control" id="course"
+							th:placeholder="#{course.filter.name.placeholder}"
+							th:value="*{name}">
+					</div>
+
+					<div class="col">
+						<select id="teacher" class="selectpicker form-control"
+							data-live-search="true" data-width="100%"
+							th:title="#{course.filter.teachers.select}">
+						</select>
+					</div>
+
+					<div class="col-auto">
+						<input type="text" class="form-control" id="attendance"
+							th:placeholder="#{course.filter.attendance.placeholder}"
+							th:value="*{attendance}">
+					</div>
+
+					<div class="col-auto">
+						<button type="submit" class="btn btn-primary mb-2"
+							th:text="#{search.button}"></button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</section>
+
+	<section layout:fragment="js">
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				$('select').selectpicker();
+
+				$.ajax({
+					type : 'GET',
+					url : "/api-gateway/teachers",
+					success : function(response) {
+						var teachers = response.accounts;
+
+						$.each(teachers, function(index, value) {
+							$('#teacher').append('<option value="' + value.id + '">' + value.firstName + ' ' + value.lastName + '</option>');
+						});
+						$("#teacher").selectpicker("refresh");
+					}
+				});
+				
+			});
+		</script>
+	</section>
 </body>
 </html>

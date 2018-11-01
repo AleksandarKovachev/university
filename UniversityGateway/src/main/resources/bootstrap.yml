@@ -21,3 +21,7 @@ zuul:
       path: /course/**
       stripPrefix: false
       serviceId: course-service
+    account-service:
+      path: /**
+      stripPrefix: false
+      serviceId: account-service

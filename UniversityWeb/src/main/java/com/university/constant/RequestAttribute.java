@@ -8,4 +8,6 @@ package com.university.constant;
  */
 public class RequestAttribute {
 
+	public static final String FILTER = "filter";
+
 }

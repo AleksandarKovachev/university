@@ -9,16 +9,23 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1.0" />
 
 <link rel="stylesheet"
-	href="/webjars/bootstrap/4.1.3/css/bootstrap.min.css" />
-<script src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
-<script src="/webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/css/bootstrap-select.css">
+
 </head>
 <body>
 	<header th:replace="fragment/Header :: header"></header>
 
-	<main>
 	<section layout:fragment="body"></section>
-	</main>
-
+	
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/js/bootstrap-select.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/js/i18n/defaults-bg_BG.js"></script>
+	
+	<section layout:fragment="js"></section>
 </body>
 </html>
