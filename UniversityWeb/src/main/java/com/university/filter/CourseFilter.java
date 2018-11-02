@@ -1,7 +1,5 @@
 package com.university.filter;
 
-import java.util.Date;
-
 import lombok.Data;
 
 /**
@@ -13,10 +11,10 @@ import lombok.Data;
 @Data
 public class CourseFilter {
 
-	private String name;
+	private String courseName;
 
 	private Long teacherId;
 
-	private Date attendance;
+	private Integer attendance;
 
 }

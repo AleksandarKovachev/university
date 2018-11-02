@@ -13,14 +13,14 @@
 			<form th:action="@{/course/get}" method="POST" th:object="${filter}">
 				<div class="form-row align-items-center">
 					<div class="col">
-						<input type="text" class="form-control" id="course"
+						<input type="text" class="form-control" id="courseName"
 							th:placeholder="#{course.filter.name.placeholder}"
-							th:value="*{name}">
+							th:field="*{courseName}">
 					</div>
 
 					<div class="col">
 						<select id="teacher" class="selectpicker form-control"
-							data-live-search="true" data-width="100%"
+							th:field="*{teacherId}" data-live-search="true" data-width="100%"
 							th:title="#{course.filter.teachers.select}">
 						</select>
 					</div>
@@ -28,11 +28,11 @@
 					<div class="col-auto">
 						<input type="text" class="form-control" id="attendance"
 							th:placeholder="#{course.filter.attendance.placeholder}"
-							th:value="*{attendance}">
+							th:field="*{attendance}">
 					</div>
 
 					<div class="col-auto">
-						<button type="submit" class="btn btn-primary mb-2"
+						<button type="submit" class="btn btn-primary"
 							th:text="#{search.button}"></button>
 					</div>
 				</div>
@@ -45,6 +45,8 @@
 			$(document).ready(function() {
 				$('select').selectpicker();
 
+				var selectedTeacherId = /*[[*{filter.teacherId}]]*/;
+
 				$.ajax({
 					type : 'GET',
 					url : "/api-gateway/teachers",
@@ -54,10 +56,14 @@
 						$.each(teachers, function(index, value) {
 							$('#teacher').append('<option value="' + value.id + '">' + value.firstName + ' ' + value.lastName + '</option>');
 						});
+
+						if(selectedTeacherId) {
+							$('#teacher').val(selectedTeacherId);
+						}
+						
 						$("#teacher").selectpicker("refresh");
 					}
 				});
-				
 			});
 		</script>
 	</section>
