@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -49,7 +50,10 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
 			predicates.add(criteriaBuilder.equal(course.get("attendance"), filter.getAttendance()));
 		}
 
-		return entityManager.createQuery(criteriaQuery).getResultList();
+		TypedQuery<Course> query = entityManager.createQuery(criteriaQuery);
+		query.setFirstResult(filter.getPageNumber() * filter.getPageSize());
+		query.setMaxResults(filter.getPageSize());
+		return query.getResultList();
 	}
 
 }

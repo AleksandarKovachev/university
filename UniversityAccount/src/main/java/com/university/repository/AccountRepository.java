@@ -18,4 +18,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
 	List<Account> findAllAccountsByRoleId(int roleId);
 
+	List<Account> findAllAccountsByIdInAndRoleId(List<Long> id, int roleId);
+
 }

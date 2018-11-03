@@ -17,4 +17,8 @@ public class CourseFilter {
 
 	private Integer attendance;
 
+	private int pageNumber;
+
+	private int pageSize;
+
 }

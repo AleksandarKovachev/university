@@ -30,9 +30,6 @@ public class CourseStudent implements Serializable {
 	private Long id;
 
 	@Column
-	private String name;
-
-	@Column
 	private Long courseId;
 
 	@Column

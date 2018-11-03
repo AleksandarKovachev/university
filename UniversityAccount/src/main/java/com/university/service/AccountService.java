@@ -29,4 +29,8 @@ public class AccountService {
 		return accountRepository.findAllAccountsByRoleId(Role.STUDENT);
 	}
 
+	public List<Account> findAllStudentsByIdInAndRoleId(List<Long> id) {
+		return accountRepository.findAllAccountsByIdInAndRoleId(id, Role.STUDENT);
+	}
+
 }

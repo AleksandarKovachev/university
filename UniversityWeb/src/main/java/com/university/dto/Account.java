@@ -1,13 +1,11 @@
 package com.university.dto;
 
-import java.util.List;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Course DTO
+ * Account DTO
  * 
  * @author aleksandar.kovachev
  *
@@ -15,16 +13,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
-public class Course {
+public class Account {
 
 	private Long id;
 
-	private String name;
+	private String keycloakId;
 
-	private String teacherId;
+	private String username;
 
-	private int attendance;
+	private String firstName;
 
-	private List<CourseStudent> courseStudents;
+	private String lastName;
+
+	private String email;
+
+	private Integer roleId;
 
 }
