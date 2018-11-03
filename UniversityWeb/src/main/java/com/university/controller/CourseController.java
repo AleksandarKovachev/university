@@ -39,6 +39,7 @@ public class CourseController {
 	public ModelAndView getCourse(@ModelAttribute CourseFilter filter) {
 		ModelMap modelMap = new ModelMap();
 		filter.setPageSize(10);
+		setCoursesData(filter, modelMap);
 		modelMap.put(RequestAttribute.FILTER, filter);
 		return new ModelAndView(ViewConstant.COURSE_GET, modelMap);
 	}
@@ -46,25 +47,27 @@ public class CourseController {
 	@PostMapping(RequestConstant.COURSES_GET)
 	public ModelAndView postCourse(@ModelAttribute CourseFilter filter) throws UnsupportedEncodingException {
 		ModelMap modelMap = new ModelMap();
+		setCoursesData(filter, modelMap);
+		modelMap.put(RequestAttribute.FILTER, filter);
+		return new ModelAndView(ViewConstant.COURSE_GET, modelMap);
+	}
 
+	private void setCoursesData(CourseFilter filter, ModelMap modelMap) {
 		StringBuilder courseUrl = new StringBuilder("http://api-gateway/course/get");
 		addCourseFilterParameters(filter, courseUrl);
 
 		ResponseEntity<CourseResponse> courseResponse = restTemplate.getForEntity(courseUrl.toString(),
 				CourseResponse.class);
-
 		if (courseResponse.hasBody()) {
 			List<Course> courses = courseResponse.getBody().getCourses();
 
 			StringBuilder teachersUrl = new StringBuilder("http://api-gateway/teachers/id");
-
 			for (Course course : courses) {
 				addQueryParameter(teachersUrl, "teacherId", course.getTeacherId());
 			}
 
 			ResponseEntity<AccountResponse> teachersResponse = restTemplate.getForEntity(teachersUrl.toString(),
 					AccountResponse.class);
-
 			if (teachersResponse.hasBody()) {
 				List<Account> accounts = teachersResponse.getBody().getAccounts();
 				courses.stream().forEach(course -> course.setTeacher(accounts.stream()
@@ -73,8 +76,6 @@ public class CourseController {
 			modelMap.put(RequestAttribute.COURSES, courses);
 			modelMap.put(RequestAttribute.TOTAL_COUNT, courseResponse.getBody().getTotalCount());
 		}
-		modelMap.put(RequestAttribute.FILTER, filter);
-		return new ModelAndView(ViewConstant.COURSE_GET, modelMap);
 	}
 
 	private void addCourseFilterParameters(CourseFilter filter, StringBuilder url) {
