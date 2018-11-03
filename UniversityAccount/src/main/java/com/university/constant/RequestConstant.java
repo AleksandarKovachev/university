@@ -14,4 +14,6 @@ public class RequestConstant {
 
 	public static final String STUDENTS_BY_ID = "/students/id";
 
+	public static final String TEACHERS_BY_ID = "/teachers/id";
+
 }

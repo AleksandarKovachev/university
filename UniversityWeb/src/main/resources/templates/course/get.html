@@ -9,8 +9,8 @@
 <body>
 	<section layout:fragment="body">
 
-		<div class="container mt-5">
-			<form th:action="@{/course/get}" method="POST" th:object="${filter}">
+		<form th:action="@{/course/get}" method="POST" th:object="${filter}">
+			<div class="container mt-5">
 				<div class="form-row align-items-center">
 					<div class="col">
 						<input type="text" class="form-control" id="courseName"
@@ -36,8 +36,42 @@
 							th:text="#{search.button}"></button>
 					</div>
 				</div>
-			</form>
-		</div>
+			</div>
+
+			<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
+				<table class="table table-hover table-striped table-responsive-lg">
+					<thead>
+						<tr>
+							<th scope="col" th:text="#{table.number}"></th>
+							<th scope="col" th:text="#{course.table.name}"></th>
+							<th scope="col" th:text="#{course.table.teacher}"></th>
+							<th scope="col" th:text="#{course.table.attendance}"></th>
+							<th scope="col" th:text="#{course.table.students.count}"></th>
+							<th scope="col" th:text="#{course.table.action}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<th:block th:each="course, iteration : ${courses}">
+							<tr>
+								<th scope="row"
+									th:text="${iteration.index + (filter.pageNumber*filter.pageSize)+1}"></th>
+								<td th:text="${course.name}"></td>
+								<td
+									th:text="${course.teacher.firstName + ' ' + course.teacher.lastName}"></td>
+								<td th:text="${course.attendance}"></td>
+								<td th:text="${#lists.size(course.courseStudents)}"></td>
+								<td><button type="button" class="btn btn-primary"
+										th:text="#{course.table.action.preview}"></button></td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</div>
+
+			<input type="hidden" name="pageSize" th:field='${filter.pageSize}' />
+			<input type="hidden" name="pageNumber"
+				th:field='${filter.pageNumber}' />
+		</form>
 	</section>
 
 	<section layout:fragment="js">

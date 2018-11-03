@@ -10,4 +10,8 @@ public class RequestAttribute {
 
 	public static final String FILTER = "filter";
 
+	public static final String COURSES = "courses";
+
+	public static final String TOTAL_COUNT = "totalCount";
+
 }

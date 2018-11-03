@@ -19,7 +19,6 @@ import com.university.constant.RequestConstant;
 import com.university.constant.ViewConstant;
 import com.university.dto.Account;
 import com.university.dto.Course;
-import com.university.dto.CourseStudent;
 import com.university.filter.CourseFilter;
 import com.university.response.AccountResponse;
 import com.university.response.CourseResponse;
@@ -39,6 +38,7 @@ public class CourseController {
 	@GetMapping(RequestConstant.COURSES_GET)
 	public ModelAndView getCourse(@ModelAttribute CourseFilter filter) {
 		ModelMap modelMap = new ModelMap();
+		filter.setPageSize(10);
 		modelMap.put(RequestAttribute.FILTER, filter);
 		return new ModelAndView(ViewConstant.COURSE_GET, modelMap);
 	}
@@ -56,27 +56,23 @@ public class CourseController {
 		if (courseResponse.hasBody()) {
 			List<Course> courses = courseResponse.getBody().getCourses();
 
-			StringBuilder studentUrl = new StringBuilder("http://api-gateway/students/id");
+			StringBuilder teachersUrl = new StringBuilder("http://api-gateway/teachers/id");
 
 			for (Course course : courses) {
-				for (CourseStudent courseStudent : course.getCourseStudents()) {
-					addQueryParameter(studentUrl, "studentId", courseStudent.getStudentId());
-				}
+				addQueryParameter(teachersUrl, "teacherId", course.getTeacherId());
 			}
 
-			ResponseEntity<AccountResponse> studentResponse = restTemplate.getForEntity(studentUrl.toString(),
+			ResponseEntity<AccountResponse> teachersResponse = restTemplate.getForEntity(teachersUrl.toString(),
 					AccountResponse.class);
 
-			if (studentResponse.hasBody()) {
-				List<Account> accounts = studentResponse.getBody().getAccounts();
-				courses.stream()
-						.forEach(course -> course.getCourseStudents().stream()
-								.forEach(courseStudent -> courseStudent.setStudent(accounts.stream()
-										.filter(account -> account.getId().equals(courseStudent.getStudentId()))
-										.findFirst().orElse(null))));
+			if (teachersResponse.hasBody()) {
+				List<Account> accounts = teachersResponse.getBody().getAccounts();
+				courses.stream().forEach(course -> course.setTeacher(accounts.stream()
+						.filter(account -> account.getId().equals(course.getTeacherId())).findFirst().orElse(null)));
 			}
+			modelMap.put(RequestAttribute.COURSES, courses);
+			modelMap.put(RequestAttribute.TOTAL_COUNT, courseResponse.getBody().getTotalCount());
 		}
-
 		modelMap.put(RequestAttribute.FILTER, filter);
 		return new ModelAndView(ViewConstant.COURSE_GET, modelMap);
 	}
@@ -93,7 +89,7 @@ public class CourseController {
 		}
 
 		addQueryParameter(url, "pageNumber", filter.getPageNumber());
-		addQueryParameter(url, "pageSize", 10);
+		addQueryParameter(url, "pageSize", filter.getPageSize());
 	}
 
 	private void addQueryParameter(StringBuilder url, String name, Object value) {

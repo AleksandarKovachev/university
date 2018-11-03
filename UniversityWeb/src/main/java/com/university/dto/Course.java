@@ -21,10 +21,12 @@ public class Course {
 
 	private String name;
 
-	private String teacherId;
+	private Long teacherId;
 
 	private int attendance;
 
 	private List<CourseStudent> courseStudents;
+
+	private Account teacher;
 
 }

@@ -19,4 +19,6 @@ public class CourseFilter {
 
 	private int pageNumber;
 
+	private int pageSize;
+
 }
