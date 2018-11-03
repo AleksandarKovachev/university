@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -58,7 +59,7 @@ public class CourseController {
 
 		ResponseEntity<CourseResponse> courseResponse = restTemplate.getForEntity(courseUrl.toString(),
 				CourseResponse.class);
-		if (courseResponse.hasBody()) {
+		if (courseResponse.hasBody() && !CollectionUtils.isEmpty(courseResponse.getBody().getCourses())) {
 			List<Course> courses = courseResponse.getBody().getCourses();
 
 			StringBuilder teachersUrl = new StringBuilder("http://api-gateway/teachers/id");

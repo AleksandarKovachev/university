@@ -80,7 +80,7 @@
 								th:text="#{pagination.previous}"></a></li>
 
 						<th:block
-							th:each="i : ${#numbers.sequence(1, ((totalCount % filter.pageSize) == 0 && totalCount != 0) ? totalCount / filter.pageSize : (totalCount / filter.pageSize) + 1)}">
+							th:each="i : ${#numbers.sequence(1, (totalCount / filter.pageSize + (totalCount % filter.pageSize)))}">
 							<li class="page-item"
 								th:classappend="${filter.pageNumber + 1 == i} ? 'active' : ''"><a
 									class="page-link" href="javascript:void(0);"
