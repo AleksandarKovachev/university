@@ -38,6 +38,10 @@
 				</div>
 			</div>
 
+			<div class="container mt-5" th:if="${#lists.isEmpty(courses)}">
+				<h3 class="text-center" th:text="#{courses.empty.list}"></h3>
+			</div>
+
 			<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
 				<table class="table table-hover table-striped table-responsive-lg">
 					<thead>
@@ -66,10 +70,36 @@
 						</th:block>
 					</tbody>
 				</table>
+
+				<nav>
+					<ul class="pagination justify-content-center">
+						<li class="page-item"
+							th:classappend="${filter.pageNumber + 1 > 1} ? '' : 'disabled'"><a
+								class="page-link" href="javascript:void(0);"
+								th:onclick="'javascript:submitForm(\'' + ${filter.pageNumber - 1} + '\');'"
+								th:text="#{pagination.previous}"></a></li>
+
+						<th:block
+							th:each="i : ${#numbers.sequence(1, ((totalCount % filter.pageSize) == 0 && totalCount != 0) ? totalCount / filter.pageSize : (totalCount / filter.pageSize) + 1)}">
+							<li class="page-item"
+								th:classappend="${filter.pageNumber + 1 == i} ? 'active' : ''"><a
+									class="page-link" href="javascript:void(0);"
+									th:onclick="'javascript:submitForm(\'' + ${i - 1} + '\');'"
+									th:text="${i}"></a></li>
+						</th:block>
+
+
+						<li class="page-item"
+							th:classappend="${(filter.pageNumber + 1) * filter.pageSize < totalCount} ? '' : 'disabled'"><a
+								class="page-link" href="javascript:void(0);"
+								th:onclick="'javascript:submitForm(\'' + ${filter.pageNumber + 1} + '\');'"
+								th:text="#{pagination.next}"></a></li>
+					</ul>
+				</nav>
 			</div>
 
 			<input type="hidden" name="pageSize" th:field='${filter.pageSize}' />
-			<input type="hidden" name="pageNumber"
+			<input type="hidden" name="pageNumber" id="pageNumber"
 				th:field='${filter.pageNumber}' />
 		</form>
 	</section>
@@ -99,6 +129,11 @@
 					}
 				});
 			});
+
+			function submitForm(pageNumber) {
+				$("#pageNumber").val(pageNumber);
+				$('form').submit();
+			}
 		</script>
 	</section>
 </body>

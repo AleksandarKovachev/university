@@ -19,4 +19,6 @@ public class CourseResponse extends BaseResponse {
 
 	private List<Course> courses;
 
+	private int totalCount;
+
 }

@@ -25,4 +25,8 @@ public class CourseService {
 		return courseRepository.findCoursesByFilter(filter);
 	}
 
+	public Integer getCountCoursesByFilter(CourseFilter filter) {
+		return courseRepository.findCountCoursesByFilter(filter).intValue();
+	}
+
 }

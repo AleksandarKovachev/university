@@ -15,4 +15,6 @@ public interface CourseRepositoryCustom {
 
 	List<Course> findCoursesByFilter(CourseFilter filter);
 
+	Number findCountCoursesByFilter(CourseFilter filter);
+
 }
