@@ -4,9 +4,40 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{/layout/BaseLayout}">
 <head>
-<title th:text="#{menu.courses}"></title>
+<title th:text="#{menu.my.courses}"></title>
 </head>
 <body>
-	<section layout:fragment="body"></section>
+	<section layout:fragment="body">
+		<div class="container mt-5" th:if="${#lists.isEmpty(courses)}">
+			<h3 class="text-center" th:text="#{courses.empty.list}"></h3>
+		</div>
+
+		<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
+			<table class="table table-hover table-responsive-lg">
+				<thead class="thead-light">
+					<tr>
+						<th scope="col" th:text="#{table.number}"></th>
+						<th scope="col" th:text="#{course.table.name}"></th>
+						<th scope="col" th:text="#{course.table.attendance}"></th>
+						<th scope="col" th:text="#{course.table.students.count}"></th>
+						<th scope="col" th:text="#{course.table.action}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="course, iteration : ${courses}">
+						<tr>
+							<th scope="row" th:text="${iteration.index + 1}"></th>
+							<td th:text="${course.name}"></td>
+							<td th:text="${course.attendance}"></td>
+							<td th:text="${#lists.size(course.courseStudents)}"></td>
+							<td><a type="button" class="btn btn-primary"
+									th:href="@{/course/preview/} + ${course.id}"
+									th:text="#{course.table.action.preview}"></a></td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+		</div>
+	</section>
 </body>
 </html>

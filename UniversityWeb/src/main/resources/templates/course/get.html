@@ -51,7 +51,6 @@
 							<th scope="col" th:text="#{course.table.teacher}"></th>
 							<th scope="col" th:text="#{course.table.attendance}"></th>
 							<th scope="col" th:text="#{course.table.students.count}"></th>
-							<th scope="col" th:text="#{course.table.action}"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -64,9 +63,6 @@
 									th:text="${course.teacher.firstName + ' ' + course.teacher.lastName}"></td>
 								<td th:text="${course.attendance}"></td>
 								<td th:text="${#lists.size(course.courseStudents)}"></td>
-								<td><a type="button" class="btn btn-primary"
-										th:href="@{/course/preview/} + ${course.id}"
-										th:text="#{course.table.action.preview}"></a></td>
 							</tr>
 						</th:block>
 					</tbody>

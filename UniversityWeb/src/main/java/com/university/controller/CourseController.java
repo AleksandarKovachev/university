@@ -1,9 +1,12 @@
 package com.university.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -38,8 +41,25 @@ public class CourseController {
 	private KeycloakRestTemplate restTemplate;
 
 	@GetMapping(RequestConstant.COURSES_MY_COURSES)
-	public ModelAndView getCourse() {
+	public ModelAndView getCourse(Principal principal) {
 		ModelMap modelMap = new ModelMap();
+
+		StringBuilder accountUrl = new StringBuilder("http://api-gateway/").append(principal.getName());
+		ResponseEntity<Account> accountResponse = restTemplate.getForEntity(accountUrl.toString(), Account.class);
+
+		if (accountResponse.hasBody()) {
+			Account account = accountResponse.getBody();
+			StringBuilder courseUrl = new StringBuilder("http://api-gateway/course/account/").append(account.getId())
+					.append("?roleId=").append(account.getRoleId());
+			ResponseEntity<List<Course>> coursesResponse = restTemplate.exchange(courseUrl.toString(), HttpMethod.GET,
+					null, new ParameterizedTypeReference<List<Course>>() {
+					});
+
+			if (coursesResponse.hasBody()) {
+				modelMap.addAttribute(RequestAttribute.COURSES, coursesResponse.getBody());
+			}
+		}
+
 		return new ModelAndView(ViewConstant.COURSE_COURSES, modelMap);
 	}
 
