@@ -7,6 +7,134 @@
 <title th:text="#{logo}"></title>
 </head>
 <body>
-	<section layout:fragment="body"></section>
+	<section layout:fragment="body">
+		<form th:action="@{/}" method="POST" th:object="${filter}">
+			<div class="container mt-5">
+				<div class="form-row align-items-center">
+					<div class="col">
+						<input type="text" class="form-control" id="courseName"
+							th:placeholder="#{course.filter.name.placeholder}"
+							th:field="*{courseName}">
+					</div>
+
+					<div class="col">
+						<select id="teacher" class="selectpicker form-control"
+							th:field="*{teacherId}" data-live-search="true" data-width="100%"
+							th:title="#{course.filter.teachers.select}">
+						</select>
+					</div>
+
+					<div class="col-auto">
+						<input type="text" class="form-control" id="attendance"
+							th:placeholder="#{course.filter.attendance.placeholder}"
+							th:field="*{attendance}">
+					</div>
+
+					<div class="col-auto">
+						<button type="submit" class="btn btn-primary"
+							th:text="#{search.button}"></button>
+					</div>
+				</div>
+			</div>
+
+			<div class="container mt-5" th:if="${#lists.isEmpty(courses)}">
+				<h3 class="text-center" th:text="#{courses.empty.list}"></h3>
+			</div>
+
+			<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
+				<table class="table table-hover table-responsive-lg">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col" th:text="#{table.number}"></th>
+							<th scope="col" th:text="#{course.table.name}"></th>
+							<th scope="col" th:text="#{course.table.teacher}"></th>
+							<th scope="col" th:text="#{course.table.attendance}"></th>
+							<th scope="col" th:text="#{course.table.students.count}"></th>
+							<th scope="col" th:text="#{course.table.action}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<th:block th:each="course, iteration : ${courses}">
+							<tr>
+								<th scope="row"
+									th:text="${iteration.index + (filter.pageNumber*filter.pageSize)+1}"></th>
+								<td th:text="${course.name}"></td>
+								<td
+									th:text="${course.teacher.firstName + ' ' + course.teacher.lastName}"></td>
+								<td th:text="${course.attendance}"></td>
+								<td th:text="${#lists.size(course.courseStudents)}"></td>
+								<td><a type="button" class="btn btn-primary"
+										th:href="@{/course/preview/} + ${course.id}"
+										th:text="#{course.table.action.preview}"></a></td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+
+				<nav>
+					<ul class="pagination justify-content-center">
+						<li class="page-item"
+							th:classappend="${filter.pageNumber + 1 > 1} ? '' : 'disabled'"><a
+								class="page-link" href="javascript:void(0);"
+								th:onclick="'javascript:submitForm(\'' + ${filter.pageNumber - 1} + '\');'"
+								th:text="#{pagination.previous}"></a></li>
+
+						<th:block
+							th:each="i : ${#numbers.sequence(1, (totalCount / filter.pageSize + (totalCount % filter.pageSize)))}">
+							<li class="page-item"
+								th:classappend="${filter.pageNumber + 1 == i} ? 'active' : ''"><a
+									class="page-link" href="javascript:void(0);"
+									th:onclick="'javascript:submitForm(\'' + ${i - 1} + '\');'"
+									th:text="${i}"></a></li>
+						</th:block>
+
+
+						<li class="page-item"
+							th:classappend="${(filter.pageNumber + 1) * filter.pageSize < totalCount} ? '' : 'disabled'"><a
+								class="page-link" href="javascript:void(0);"
+								th:onclick="'javascript:submitForm(\'' + ${filter.pageNumber + 1} + '\');'"
+								th:text="#{pagination.next}"></a></li>
+					</ul>
+				</nav>
+			</div>
+
+			<input type="hidden" name="pageSize" th:field='${filter.pageSize}' />
+			<input type="hidden" name="pageNumber" id="pageNumber"
+				th:field='${filter.pageNumber}' />
+		</form>
+	</section>
+
+	<section layout:fragment="js">
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				$('select').selectpicker();
+
+				var selectedTeacherId = /*[[*{filter.teacherId}]]*/;
+
+				$.ajax({
+					type : 'GET',
+					url : "/api-gateway/teachers",
+					success : function(response) {
+						var teachers = response.accounts;
+
+						$.each(teachers, function(index, value) {
+							$('#teacher').append('<option value="' + value.id + '">' + value.firstName + ' ' + value.lastName + '</option>');
+						});
+
+						if(selectedTeacherId) {
+							$('#teacher').val(selectedTeacherId);
+						}
+						
+						$("#teacher").selectpicker("refresh");
+					}
+				});
+			});
+
+			function submitForm(pageNumber) {
+				$("#pageNumber").val(pageNumber);
+				$('form').submit();
+			}
+		</script>
+	</section>
 </body>
 </html>
