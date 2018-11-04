@@ -18,9 +18,12 @@
 				<a sec:authorize="isAnonymous()" class="nav-item nav-link"
 					th:href="@{/signin}" th:text="#{menu.login}"></a>
 
+				<a sec:authorize="isAuthenticated()" class="nav-item nav-link"
+					th:href="@{/courses}" th:text="#{menu.courses}"></a>
+
 				<a sec:authorize="hasAuthority('ROLE_TEACHER')"
-					class="nav-item nav-link" th:href="@{/course/get}"
-					th:text="#{menu.courses}"></a>
+					class="nav-item nav-link" th:href="@{/course/myCourses}"
+					th:text="#{menu.my.courses}"></a>
 
 				<a sec:authorize="isAuthenticated()" class="nav-item nav-link"
 					th:href="@{|/${#authentication.name}|}" th:text="#{menu.account}"></a>

@@ -16,7 +16,9 @@ public class RequestConstant {
 
 	public static final String REDIRECT = "redirect:";
 
-	public static final String COURSES_GET = "/course/get";
+	public static final String COURSES = "/courses";
+
+	public static final String COURSES_MY_COURSES = "/course/myCourses";
 
 	public static final String COURSES_PREVIEW = "/course/preview/{id}";
 
