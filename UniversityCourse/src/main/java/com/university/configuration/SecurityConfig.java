@@ -25,6 +25,8 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
+import com.university.constant.RequestConstant;
+
 /**
  * Defining Security Configuration using Keycloak
  * 
@@ -77,6 +79,9 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 		super.configure(http);
 		http.csrf().disable()
 			.authorizeRequests()
+			.antMatchers(RequestConstant.COURSE_GET).authenticated()
+			.antMatchers(RequestConstant.COURSE).authenticated()
+			.antMatchers(RequestConstant.COURSES_BY_ACCOUNT_ID).authenticated()
 			.anyRequest().permitAll();
 	}// @formatter:on
 
