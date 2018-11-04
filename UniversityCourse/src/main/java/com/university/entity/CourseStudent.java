@@ -2,10 +2,12 @@ package com.university.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,7 +37,7 @@ public class CourseStudent implements Serializable {
 	@Column
 	private Long studentId;
 
-	@Column
-	private Integer gradeId;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Grade grade;
 
 }

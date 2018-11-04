@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * CourseStudent DTO
+ * Grade DTO
  * 
  * @author aleksandar.kovachev
  *
@@ -13,16 +13,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
-public class CourseStudent {
+public class Grade {
 
-	private Long id;
+	private Integer id;
 
-	private Long courseId;
+	private String name;
 
-	private Long studentId;
-
-	private Grade grade;
-
-	private Account student;
+	private int value;
 
 }

@@ -43,7 +43,7 @@
 			</div>
 
 			<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
-				<table class="table table-hover table-striped table-responsive-lg">
+				<table class="table table-hover table-responsive-lg">
 					<thead>
 						<tr>
 							<th scope="col" th:text="#{table.number}"></th>
@@ -64,8 +64,9 @@
 									th:text="${course.teacher.firstName + ' ' + course.teacher.lastName}"></td>
 								<td th:text="${course.attendance}"></td>
 								<td th:text="${#lists.size(course.courseStudents)}"></td>
-								<td><button type="button" class="btn btn-primary"
-										th:text="#{course.table.action.preview}"></button></td>
+								<td><a type="button" class="btn btn-primary"
+										th:href="@{/course/preview/} + ${course.id}"
+										th:text="#{course.table.action.preview}"></a></td>
 							</tr>
 						</th:block>
 					</tbody>

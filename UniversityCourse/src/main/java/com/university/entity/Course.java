@@ -46,4 +46,8 @@ public class Course implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CourseStudent> courseStudents;
 
+	@JoinColumn(name = "courseId")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<CourseAttendance> courseAttendance;
+
 }

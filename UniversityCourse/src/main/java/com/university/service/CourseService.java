@@ -29,4 +29,8 @@ public class CourseService {
 		return courseRepository.findCountCoursesByFilter(filter).intValue();
 	}
 
+	public Course getCourse(Long id) {
+		return courseRepository.findById(id).orElse(null);
+	}
+
 }

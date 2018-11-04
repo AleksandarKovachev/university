@@ -1,0 +1,69 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/BaseLayout}">
+<head>
+<title th:text="#{menu.courses}"></title>
+</head>
+<body>
+	<section layout:fragment="body">
+
+		<div class="container mt-5">
+			<h2 class="text-center" th:text="${course.name}"></h2>
+
+			<div class="row">
+				<div class="col text-center">
+					<span th:text="#{course.preview.teacher}"></span>
+					<strong>
+						<span
+							th:text="${course.teacher.firstName + ' ' + course.teacher.lastName}"></span>
+					</strong>
+				</div>
+				<div class="col text-center">
+					<span th:text="#{course.preview.attendance}"></span>
+					<strong>
+						<span th:text="${course.attendance}"></span>
+					</strong>
+				</div>
+			</div>
+		</div>
+
+		<div class="container mt-5"
+			th:if="${not #lists.isEmpty(course.courseStudents)}">
+			<table class="table table-hover table-responsive-lg">
+				<thead>
+					<tr>
+						<th scope="col" th:text="#{table.number}"></th>
+						<th scope="col" th:text="#{course.preview.student.name}"></th>
+						<th scope="col" th:text="#{course.preview.student.username}"></th>
+						<th scope="col" th:text="#{course.preview.student.email}"></th>
+						<th scope="col" th:text="#{course.preview.student.attendance}"></th>
+						<th scope="col" th:text="#{course.preview.student.grade}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="account, iteration : ${course.courseStudents}">
+						<tr>
+							<th scope="row" th:text="${iteration.index + 1}"></th>
+							<td
+								th:text="${account.student.firstName + ' ' + account.student.lastName}"></td>
+							<td th:text="${account.student.username}"></td>
+							<td th:text="${account.student.email}"></td>
+							<td><table>
+									<th:block th:each="attendance : ${course.courseAttendance}">
+										<tr>
+											<td
+												th:text="${#dates.format(attendance.attendance, 'dd-MMMM-yyyy HH:mm:ss')}"></td>
+										</tr>
+									</th:block>
+								</table></td>
+							<td th:text="${account.grade.name + ' ' + account.grade.value}"></td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+		</div>
+	</section>
+</body>
+</html>

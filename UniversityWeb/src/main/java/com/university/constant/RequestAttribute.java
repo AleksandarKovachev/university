@@ -14,4 +14,6 @@ public class RequestAttribute {
 
 	public static final String TOTAL_COUNT = "totalCount";
 
+	public static final String COURSE = "course";
+
 }

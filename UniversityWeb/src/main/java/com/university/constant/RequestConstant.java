@@ -18,4 +18,6 @@ public class RequestConstant {
 
 	public static final String COURSES_GET = "/course/get";
 
+	public static final String COURSES_PREVIEW = "/course/preview/{id}";
+
 }

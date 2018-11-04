@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,6 +21,7 @@ import com.university.constant.RequestConstant;
 import com.university.constant.ViewConstant;
 import com.university.dto.Account;
 import com.university.dto.Course;
+import com.university.dto.CourseStudent;
 import com.university.filter.CourseFilter;
 import com.university.response.AccountResponse;
 import com.university.response.CourseResponse;
@@ -51,6 +53,49 @@ public class CourseController {
 		setCoursesData(filter, modelMap);
 		modelMap.put(RequestAttribute.FILTER, filter);
 		return new ModelAndView(ViewConstant.COURSE_GET, modelMap);
+	}
+
+	@GetMapping(RequestConstant.COURSES_PREVIEW)
+	public ModelAndView previewCourse(@PathVariable("id") String id) {
+		ModelMap modelMap = new ModelMap();
+		if (org.apache.commons.lang.StringUtils.isNumeric(id)) {
+			StringBuilder courseUrl = new StringBuilder("http://api-gateway/course/" + id);
+			ResponseEntity<Course> courseResponse = restTemplate.getForEntity(courseUrl.toString(), Course.class);
+
+			if (courseResponse.hasBody()) {
+				Course course = courseResponse.getBody();
+
+				StringBuilder studentUrl = new StringBuilder("http://api-gateway/students/id");
+				for (CourseStudent courseStudent : course.getCourseStudents()) {
+					addQueryParameter(studentUrl, "studentId", courseStudent.getStudentId());
+				}
+
+				ResponseEntity<AccountResponse> studentResponse = restTemplate.getForEntity(studentUrl.toString(),
+						AccountResponse.class);
+
+				if (studentResponse.hasBody()) {
+					List<Account> accounts = studentResponse.getBody().getAccounts();
+					course.getCourseStudents().stream()
+							.forEach(courseStudent -> courseStudent.setStudent(accounts.stream()
+									.filter(account -> account.getId().equals(courseStudent.getStudentId())).findFirst()
+									.orElse(null)));
+				}
+
+				StringBuilder teachersUrl = new StringBuilder("http://api-gateway/teachers/id");
+				addQueryParameter(teachersUrl, "teacherId", course.getTeacherId());
+
+				ResponseEntity<AccountResponse> teachersResponse = restTemplate.getForEntity(teachersUrl.toString(),
+						AccountResponse.class);
+				if (teachersResponse.hasBody()) {
+					List<Account> accounts = teachersResponse.getBody().getAccounts();
+					course.setTeacher(accounts.stream().filter(account -> account.getId().equals(course.getTeacherId()))
+							.findFirst().orElse(null));
+				}
+
+				modelMap.put(RequestAttribute.COURSE, course);
+			}
+		}
+		return new ModelAndView(ViewConstant.COURSE_PREVIEW, modelMap);
 	}
 
 	private void setCoursesData(CourseFilter filter, ModelMap modelMap) {

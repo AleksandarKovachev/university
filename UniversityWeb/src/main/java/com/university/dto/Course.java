@@ -27,6 +27,8 @@ public class Course {
 
 	private List<CourseStudent> courseStudents;
 
+	private List<CourseAttendance> courseAttendance;
+
 	private Account teacher;
 
 }
