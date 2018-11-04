@@ -33,4 +33,8 @@ public class AccountService {
 		return accountRepository.findAllAccountsByIdInAndRoleId(id, roleId);
 	}
 
+	public Account findAccountByUsername(String username) {
+		return accountRepository.findAccountByUsername(username);
+	}
+
 }
