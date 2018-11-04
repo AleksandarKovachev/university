@@ -1,0 +1,70 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/BaseLayout}">
+<head>
+<title th:text="${account.firstName + ' ' + account.lastName}"></title>
+</head>
+<body>
+	<section layout:fragment="body">
+
+		<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
+			<h1 class="text-center" th:text="#{account.courses}"></h1>
+
+			<table class="table table-hover table-responsive-lg">
+				<thead class="thead-light">
+					<tr>
+						<th scope="col" th:text="#{table.number}"></th>
+						<th scope="col" th:text="#{course.table.name}"></th>
+						<th scope="col" th:text="#{course.table.attendance}"></th>
+						<th scope="col" th:text="#{account.courses.students}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="course, iteration : ${courses}">
+						<tr>
+							<th scope="row" th:text="${iteration.index + 1}"></th>
+							<td th:text="${course.name}"></td>
+							<td th:text="${course.attendance}"></td>
+							<td><th:block
+									th:if="${#lists.isEmpty(course.courseStudents)}">
+									0
+								</th:block> <th:block th:if="${not #lists.isEmpty(course.courseStudents)}">
+									<table>
+										<thead>
+											<tr>
+												<th scope="col" th:text="#{course.preview.student.name}"></th>
+												<th scope="col"
+													th:text="#{course.preview.student.attendance}"></th>
+												<th scope="col" th:text="#{course.preview.student.grade}"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="courseStudent : ${course.courseStudents}">
+												<tr>
+													<td
+														th:text="${courseStudent.student.firstName + ' ' + courseStudent.student.lastName}"></td>
+													<td class="text-center"><th:block
+															th:each="courseAttendance : ${course.courseAttendance}">
+															<p
+																th:if="${courseAttendance.studentId == courseStudent.student.id}"
+																th:text="${#dates.format(courseAttendance.attendance, 'dd-MMMM-yyyy HH:mm:ss')}">
+															</p>
+														</th:block></td>
+													<td th:if="${courseStudent.grade != null}"
+														th:text="${courseStudent.grade.name + ' ' + courseStudent.grade.value}"></td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
+								</th:block></td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+		</div>
+
+	</section>
+</body>
+</html>

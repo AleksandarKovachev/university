@@ -73,7 +73,7 @@ public class AccountController {
 												.orElse(null))));
 					}
 					modelMap.addAttribute(RequestAttribute.COURSES, courses);
-					return new ModelAndView(ViewConstant.ACCOUNT_STUDENT, modelMap);
+					return new ModelAndView(ViewConstant.ACCOUNT_TEACHER, modelMap);
 				} else {
 					StringBuilder teachersUrl = new StringBuilder("http://api-gateway/teachers/id");
 
