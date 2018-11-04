@@ -20,7 +20,7 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseRep
 
 	List<Course> findAllCoursesByTeacherId(Long teacherId);
 
-	@Query("SELECT c FROM Course c, CourseStudent cs WHERE cs.studentId = :studentId")
+	@Query("SELECT c FROM Course c join CourseStudent cs on c.id = cs.courseId WHERE cs.studentId = :studentId")
 	List<Course> findAllCoursesByStudentId(@Param("studentId") Long studentId);
 
 }

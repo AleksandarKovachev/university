@@ -59,7 +59,7 @@ public class CourseController {
 	public ModelAndView previewCourse(@PathVariable("id") String id) {
 		ModelMap modelMap = new ModelMap();
 		if (org.apache.commons.lang.StringUtils.isNumeric(id)) {
-			StringBuilder courseUrl = new StringBuilder("http://api-gateway/course/" + id);
+			StringBuilder courseUrl = new StringBuilder("http://api-gateway/course/").append(id);
 			ResponseEntity<Course> courseResponse = restTemplate.getForEntity(courseUrl.toString(), Course.class);
 
 			if (courseResponse.hasBody()) {

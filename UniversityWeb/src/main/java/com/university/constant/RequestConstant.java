@@ -20,4 +20,6 @@ public class RequestConstant {
 
 	public static final String COURSES_PREVIEW = "/course/preview/{id}";
 
+	public static final String ACCOUNT = "/{username}";
+
 }

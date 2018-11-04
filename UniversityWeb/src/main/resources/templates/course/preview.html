@@ -4,7 +4,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{/layout/BaseLayout}">
 <head>
-<title th:text="#{menu.courses}"></title>
+<title th:text="${course.name}"></title>
 </head>
 <body>
 	<section layout:fragment="body">
@@ -32,7 +32,7 @@
 		<div class="container mt-5"
 			th:if="${not #lists.isEmpty(course.courseStudents)}">
 			<table class="table table-hover table-responsive-lg">
-				<thead>
+				<thead class="thead-light">
 					<tr>
 						<th scope="col" th:text="#{table.number}"></th>
 						<th scope="col" th:text="#{course.preview.student.name}"></th>

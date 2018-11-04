@@ -16,4 +16,6 @@ public class RequestAttribute {
 
 	public static final String COURSE = "course";
 
+	public static final String ACCOUNT = "account";
+
 }

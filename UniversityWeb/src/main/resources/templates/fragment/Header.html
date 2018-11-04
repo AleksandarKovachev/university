@@ -23,6 +23,9 @@
 					th:text="#{menu.courses}"></a>
 
 				<a sec:authorize="isAuthenticated()" class="nav-item nav-link"
+					th:href="@{|/${#authentication.name}|}" th:text="#{menu.account}"></a>
+
+				<a sec:authorize="isAuthenticated()" class="nav-item nav-link"
 					th:href="@{/logout}" th:text="#{menu.logout}"></a>
 			</div>
 		</div>

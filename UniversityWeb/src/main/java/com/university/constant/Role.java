@@ -8,6 +8,16 @@ package com.university.constant;
  */
 public enum Role {
 
-	TEACHER, STUDENT;
+	TEACHER(1), STUDENT(2);
+
+	private int id;
+
+	private Role(int id) {
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
+	}
 
 }

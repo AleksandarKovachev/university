@@ -1,0 +1,80 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/BaseLayout}">
+<head>
+<title th:text="${account.firstName + ' ' + account.lastName}"></title>
+</head>
+<body>
+	<section layout:fragment="body">
+
+		<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
+			<h1 class="text-center" th:text="#{account.courses}"></h1>
+
+			<table class="table table-hover table-responsive-lg">
+				<thead class="thead-light">
+					<tr>
+						<th scope="col" th:text="#{table.number}"></th>
+						<th scope="col" th:text="#{course.table.name}"></th>
+						<th scope="col" th:text="#{account.course.teacher}"></th>
+						<th scope="col" th:text="#{course.table.attendance}"></th>
+						<th scope="col" th:text="#{course.table.students.count}"></th>
+						<th scope="col" th:text="#{course.table.grade}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="course, iteration : ${courses}">
+						<tr>
+							<th scope="row" th:text="${iteration.index + 1}"></th>
+							<td th:text="${course.name}"></td>
+							<td
+								th:text="${course.teacher.firstName + ' ' + course.teacher.lastName}"></td>
+							<td th:text="${course.attendance}"></td>
+							<td th:text="${#lists.size(course.courseStudents)}"></td>
+							<th:block th:each="courseStudent : ${course.courseStudents}">
+								<td
+									th:if="${courseStudent.studentId == account.id && courseStudent.grade != null}"
+									th:text="${courseStudent.grade.name + ' ' + courseStudent.grade.value}"></td>
+							</th:block>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+		</div>
+
+		<div th:if="${not #lists.isEmpty(courses)}">
+			<h1 class="text-center" th:text="#{course.preview.attendance}"></h1>
+
+			<th:block th:each="course, iteration : ${courses}">
+				<div class="container mt-5">
+					<table
+						class="table table-hover table-bordered table-responsive-sm table-sm">
+						<thead class="thead-light">
+							<tr>
+								<th style="width: 20%" class="text-center" scope="col"
+									th:text="${course.name}"></th>
+								<th class="text-center" scope="col"
+									th:text="#{account.courses.attend.date}"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block
+								th:each="courseAttendance, iteration : ${course.courseAttendance}"
+								th:if="${courseAttendance.studentId == account.id}">
+								<tr>
+									<th class="text-center" scope="row"
+										th:text="${iteration.index + 1}"></th>
+									<td class="text-center"
+										th:text="${#dates.format(courseAttendance.attendance, 'dd-MMMM-yyyy HH:mm:ss')}"></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</th:block>
+		</div>
+
+	</section>
+</body>
+</html>

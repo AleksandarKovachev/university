@@ -14,4 +14,7 @@ public class ViewConstant {
 
 	public static final String COURSE_PREVIEW = "course/preview";
 
+	public static final String ACCOUNT_STUDENT = "account/student";
+	public static final String ACCOUNT_TEACHER = "account/teacher";
+
 }
