@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,9 +15,12 @@ import com.university.constant.RequestConstant;
 import com.university.constant.ResponseStatus;
 import com.university.constant.Role;
 import com.university.entity.Course;
+import com.university.entity.Grade;
 import com.university.filter.CourseFilter;
 import com.university.response.CourseResponse;
 import com.university.service.CourseService;
+import com.university.service.CourseStudentService;
+import com.university.service.GradeService;
 
 /**
  * Rest controller for working with courses
@@ -29,6 +33,12 @@ public class CourseController {
 
 	@Autowired
 	private CourseService courseService;
+
+	@Autowired
+	private GradeService gradeService;
+
+	@Autowired
+	private CourseStudentService courseStudentService;
 
 	@GetMapping(RequestConstant.COURSE_GET)
 	public CourseResponse getCourses(@ModelAttribute CourseFilter filter) {
@@ -58,6 +68,17 @@ public class CourseController {
 		} else {
 			return courseService.findAllCoursesByTeacherId(Long.parseLong(id));
 		}
+	}
+
+	@GetMapping(RequestConstant.GRADES)
+	public List<Grade> course() {
+		return gradeService.getAllGrades();
+	}
+
+	@PostMapping(RequestConstant.COURSESTUDENT_UPDATE)
+	public void changeStudentGrade(@RequestParam int gradeId, @RequestParam long courseId,
+			@RequestParam long studentId) {
+		courseStudentService.updateCourseStudentByCourseIdandStudentId(gradeId, courseId, studentId);
 	}
 
 }

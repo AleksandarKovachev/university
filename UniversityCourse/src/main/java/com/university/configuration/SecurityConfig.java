@@ -78,11 +78,10 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
 		http.csrf().disable()
-			.authorizeRequests()
+			.authorizeRequests().anyRequest().permitAll()
 			.antMatchers(RequestConstant.COURSE_GET).authenticated()
 			.antMatchers(RequestConstant.COURSE).authenticated()
-			.antMatchers(RequestConstant.COURSES_BY_ACCOUNT_ID).authenticated()
-			.anyRequest().permitAll();
+			.antMatchers(RequestConstant.COURSES_BY_ACCOUNT_ID).authenticated();
 	}// @formatter:on
 
 }

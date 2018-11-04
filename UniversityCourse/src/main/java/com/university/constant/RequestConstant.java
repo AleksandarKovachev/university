@@ -14,4 +14,8 @@ public class RequestConstant {
 
 	public static final String COURSES_BY_ACCOUNT_ID = "/course/account/{id}";
 
+	public static final String GRADES = "/course/grades";
+
+	public static final String COURSESTUDENT_UPDATE = "/course/courseStudent";
+
 }

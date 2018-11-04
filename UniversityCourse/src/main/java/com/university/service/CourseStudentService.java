@@ -18,4 +18,8 @@ public class CourseStudentService {
 	@Autowired
 	private CourseStudentRepository courseStudentRepository;
 
+	public void updateCourseStudentByCourseIdandStudentId(int gradeId, long courseId, long studentId) {
+		courseStudentRepository.updateCourseStudentByCourseIdandStudentId(gradeId, courseId, studentId);
+	}
+
 }

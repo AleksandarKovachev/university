@@ -54,6 +54,12 @@
 														</th:block></td>
 													<td th:if="${courseStudent.grade != null}"
 														th:text="${courseStudent.grade.name + ' ' + courseStudent.grade.value}"></td>
+													<td th:if="${courseStudent.grade == null}"><select
+															th:id="'grades' + ${courseStudent.courseId}"
+															class="selectpicker" data-live-search="true">
+														</select> <a type="button" class="btn btn-primary"
+															th:onclick="'javascript:updateStudentGrade(\'' + ${courseStudent.courseId} + '\', \'' + ${courseStudent.studentId} + '\');'"
+															th:text="#{course.button.save}"></a></td>
 												</tr>
 											</th:block>
 										</tbody>
@@ -65,6 +71,65 @@
 			</table>
 		</div>
 
+		<div class="modal" tabindex="-1" role="dialog" id="myModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" th:text="#{course.modal.title}"></h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p th:text="#{course.modal.success.message}"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" th:text="#{course.modal.close.button}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+
+	<section layout:fragment="js">
+		<script th:inline="javascript">
+			$(document).ready(function() {
+
+				if($("#grades")) {
+					$('select').selectpicker();
+	
+					$.ajax({
+						type : 'GET',
+						url : "/api-gateway/course/grades",
+						success : function(response) {
+							$.each(response, function(index, value) {
+								$('select').append('<option value="' + value.id + '">' + value.name + ' ' + value.value + '</option>');
+							});
+	
+							$("select").selectpicker("refresh");
+						}
+					});
+				}
+			});
+
+			function updateStudentGrade(courseId, studentId) {
+				$.ajax({
+					type : 'POST',
+					url : "/api-gateway/course/courseStudent",
+					data: {
+						"gradeId": $("#grades" + courseId).val(),
+						"courseId": courseId,
+						"studentId": studentId
+					},
+					success : function(response) {
+						$('#myModal').modal()
+					}
+				});
+			}
+		</script>
 	</section>
 </body>
 </html>
