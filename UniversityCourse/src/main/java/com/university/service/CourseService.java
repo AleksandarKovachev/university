@@ -33,4 +33,12 @@ public class CourseService {
 		return courseRepository.findById(id).orElse(null);
 	}
 
+	public List<Course> findAllCoursesByTeacherId(Long teacherId) {
+		return courseRepository.findAllCoursesByTeacherId(teacherId);
+	}
+
+	public List<Course> findAllCoursesByStudentId(Long studentId) {
+		return courseRepository.findAllCoursesByStudentId(studentId);
+	}
+
 }
