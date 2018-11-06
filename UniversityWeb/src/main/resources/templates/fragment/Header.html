@@ -21,6 +21,10 @@
 				<a sec:authorize="isAuthenticated()" class="nav-item nav-link"
 					th:href="@{/courses}" th:text="#{menu.courses}"></a>
 
+				<a sec:authorize="hasAuthority('ROLE_ADMIN')"
+					class="nav-item nav-link" th:href="@{/admin}"
+					th:text="#{menu.admin.panel}"></a>
+
 				<a sec:authorize="hasAuthority('ROLE_TEACHER')"
 					class="nav-item nav-link" th:href="@{/course/myCourses}"
 					th:text="#{menu.my.courses}"></a>

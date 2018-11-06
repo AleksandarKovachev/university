@@ -27,6 +27,7 @@ public class Role implements Serializable {
 
 	public static final Integer TEACHER = 1;
 	public static final Integer STUDENT = 2;
+	public static final Integer ADMIN = 3;
 
 	@Id
 	@GeneratedValue

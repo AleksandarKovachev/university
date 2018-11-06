@@ -8,7 +8,7 @@ package com.university.constant;
  */
 public enum Role {
 
-	TEACHER(1), STUDENT(2);
+	TEACHER(1), STUDENT(2), ADMIN(3);
 
 	private int id;
 
