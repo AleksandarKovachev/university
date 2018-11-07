@@ -8,7 +8,81 @@
 </head>
 <body>
 	<section layout:fragment="body">
-		<div class="container mt-5"></div>
+		<div class="container mt-5">
+			<div class="row">
+				<div class="col">
+					<select id="course" class="selectpicker form-control"
+						data-live-search="true" data-width="100%"
+						th:title="#{admin.courses.select}">
+					</select>
+				</div>
+
+				<div class="col">
+					<select id="student" class="selectpicker form-control" disabled
+						data-live-search="true" multiple data-width="100%"
+						th:title="#{admin.students.select}">
+					</select>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section layout:fragment="js">
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				$('select').selectpicker();
+
+				var students;
+				var courses;
+
+				$("#course").on('change', function() {
+					selectedCourseId = this.value;
+					$('#student').find('option').remove().end();
+					
+					var selectedCourse;
+					$.each(courses, function(index, value) {
+						if(value.id == selectedCourseId) {
+							selectedCourse = value;
+						}
+					});
+
+					courseStudentsIds = selectedCourse.courseStudents.map(function(x) {
+						  return x.studentId;
+					});
+					
+					$.each(students, function(index, value) {
+						if(!courseStudentsIds.includes(value.id)) {
+							$('#student').append('<option value="' + value.id + '">' + value.firstName + ' ' + value.lastName + '</option>');
+						}
+					});
+					
+					$('#student').attr('disabled', false);
+					$("#student").selectpicker("refresh");
+				});
+
+				$.ajax({
+					type : 'GET',
+					url : "/api-gateway/course/courses",
+					success : function(response) {
+						courses = response;
+						$.each(response, function(index, value) {
+							$('#course').append('<option value="' + value.id + '">' + value.name + '</option>');
+						});
+
+						$("#course").selectpicker("refresh");
+					}
+				});
+
+				$.ajax({
+					type : 'GET',
+					url : "/api-gateway/students",
+					success : function(response) {
+						students = response.accounts;
+					}
+				});
+			});
+			
+		</script>
 	</section>
 </body>
 </html>

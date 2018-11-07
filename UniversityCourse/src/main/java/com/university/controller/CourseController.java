@@ -57,6 +57,11 @@ public class CourseController {
 		return courseService.getCourse(Long.parseLong(id));
 	}
 
+	@GetMapping(RequestConstant.COURSES)
+	public List<Course> courses() {
+		return courseService.findAllCourses();
+	}
+
 	@GetMapping(RequestConstant.COURSES_BY_ACCOUNT_ID)
 	public List<Course> course(@PathVariable("id") String id, @RequestParam("roleId") String roleId) {
 		if (!StringUtils.isNumeric(id) && !StringUtils.isNumeric(roleId)) {
