@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,7 +35,7 @@ public class AccountController {
 	private KeycloakRestTemplate restTemplate;
 
 	@GetMapping(RequestConstant.ACCOUNT)
-	public ModelAndView getCourse(@PathVariable String username) {
+	public ModelAndView account(@PathVariable String username) {
 		ModelMap modelMap = new ModelMap();
 
 		StringBuilder accountUrl = new StringBuilder("http://api-gateway/").append(username);
@@ -50,7 +51,7 @@ public class AccountController {
 
 			modelMap.addAttribute(RequestAttribute.ACCOUNT, account);
 
-			if (coursesResponse.hasBody()) {
+			if (coursesResponse.hasBody() && !CollectionUtils.isEmpty(coursesResponse.getBody())) {
 				List<Course> courses = coursesResponse.getBody();
 				if (account.getRoleId().equals(Role.TEACHER.getId())) {
 					StringBuilder studentUrl = new StringBuilder("http://api-gateway/students/id");
@@ -94,7 +95,7 @@ public class AccountController {
 				}
 			}
 		}
-		return null;
+		return new ModelAndView(ViewConstant.ACCOUNT_STUDENT, modelMap);
 	}
 
 	private void addQueryParameter(StringBuilder url, String name, Object value) {

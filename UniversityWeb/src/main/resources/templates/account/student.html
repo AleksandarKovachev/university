@@ -9,6 +9,43 @@
 <body>
 	<section layout:fragment="body">
 
+		<div class="container mt-5">
+			<div class="row justify-content-md-center">
+				<div class="col-md-auto">
+					<span th:text="#{account.username}"></span>
+				</div>
+				<div class="col-md-auto">
+					<strong class="text-center" th:text="${account.username}"></strong>
+				</div>
+			</div>
+
+			<div class="row justify-content-md-center">
+				<div class="col-md-auto">
+					<span th:text="#{account.first.name}"></span>
+				</div>
+				<div class="col-md-auto">
+					<strong class="text-center" th:text="${account.firstName}"></strong>
+				</div>
+			</div>
+
+			<div class="row justify-content-md-center">
+				<div class="col-md-auto">
+					<span th:text="#{account.last.name}"></span>
+				</div>
+				<div class="col-md-auto">
+					<strong class="text-center" th:text="${account.lastName}"></strong>
+				</div>
+			</div>
+			<div class="row justify-content-md-center">
+				<div class="col-md-auto">
+					<span th:text="#{account.email}"></span>
+				</div>
+				<div class="col-md-auto">
+					<strong class="text-center" th:text="${account.email}"></strong>
+				</div>
+			</div>
+		</div>
+
 		<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
 			<h1 class="text-center" th:text="#{account.courses}"></h1>
 
@@ -41,40 +78,39 @@
 					</th:block>
 				</tbody>
 			</table>
-		</div>
 
-		<div th:if="${not #lists.isEmpty(courses)}">
-			<h1 class="text-center" th:text="#{course.preview.attendance}"></h1>
+			<div th:if="${not #lists.isEmpty(courses)}">
+				<h1 class="text-center" th:text="#{course.preview.attendance}"></h1>
 
-			<th:block th:each="course, iteration : ${courses}">
-				<div class="container mt-5">
-					<table
-						class="table table-hover table-bordered table-responsive-sm table-sm">
-						<thead class="thead-light">
-							<tr>
-								<th style="width: 20%" class="text-center" scope="col"
-									th:text="${course.name}"></th>
-								<th class="text-center" scope="col"
-									th:text="#{account.courses.attend.date}"></th>
-							</tr>
-						</thead>
-						<tbody>
-							<th:block
-								th:each="courseAttendance, iteration : ${course.courseAttendance}"
-								th:if="${courseAttendance.studentId == account.id}">
+				<th:block th:each="course, iteration : ${courses}">
+					<div class="container mt-5">
+						<table
+							class="table table-hover table-bordered table-responsive-sm table-sm">
+							<thead class="thead-light">
 								<tr>
-									<th class="text-center" scope="row"
-										th:text="${iteration.index + 1}"></th>
-									<td class="text-center"
-										th:text="${#dates.format(courseAttendance.attendance, 'dd-MMMM-yyyy HH:mm:ss')}"></td>
+									<th style="width: 20%" class="text-center" scope="col"
+										th:text="${course.name}"></th>
+									<th class="text-center" scope="col"
+										th:text="#{account.courses.attend.date}"></th>
 								</tr>
-							</th:block>
-						</tbody>
-					</table>
-				</div>
-			</th:block>
+							</thead>
+							<tbody>
+								<th:block
+									th:each="courseAttendance, iteration : ${course.courseAttendance}"
+									th:if="${courseAttendance.studentId == account.id}">
+									<tr>
+										<th class="text-center" scope="row"
+											th:text="${iteration.index + 1}"></th>
+										<td class="text-center"
+											th:text="${#dates.format(courseAttendance.attendance, 'dd-MMMM-yyyy HH:mm:ss')}"></td>
+									</tr>
+								</th:block>
+							</tbody>
+						</table>
+					</div>
+				</th:block>
+			</div>
 		</div>
-
 	</section>
 </body>
 </html>

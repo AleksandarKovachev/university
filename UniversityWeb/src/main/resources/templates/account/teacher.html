@@ -9,6 +9,43 @@
 <body>
 	<section layout:fragment="body">
 
+		<div class="container">
+			<div class="row justify-content-md-center">
+				<div class="col-md-auto">
+					<span th:text="#{account.username}"></span>
+				</div>
+				<div class="col-md-auto">
+					<strong class="text-center" th:text="${account.username}"></strong>
+				</div>
+			</div>
+
+			<div class="row justify-content-md-center">
+				<div class="col-md-auto">
+					<span th:text="#{account.first.name}"></span>
+				</div>
+				<div class="col-md-auto">
+					<strong class="text-center" th:text="${account.firstName}"></strong>
+				</div>
+			</div>
+
+			<div class="row justify-content-md-center">
+				<div class="col-md-auto">
+					<span th:text="#{account.last.name}"></span>
+				</div>
+				<div class="col-md-auto">
+					<strong class="text-center" th:text="${account.lastName}"></strong>
+				</div>
+			</div>
+			<div class="row justify-content-md-center">
+				<div class="col-md-auto">
+					<span th:text="#{account.email}"></span>
+				</div>
+				<div class="col-md-auto">
+					<strong class="text-center" th:text="${account.email}"></strong>
+				</div>
+			</div>
+		</div>
+
 		<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
 			<h1 class="text-center" th:text="#{account.courses}"></h1>
 
