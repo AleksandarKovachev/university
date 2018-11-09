@@ -94,9 +94,10 @@
 													<td th:if="${courseStudent.grade == null}"><select
 															th:id="'grades' + ${courseStudent.courseId}"
 															class="selectpicker" data-live-search="true">
-														</select> <a type="button" class="btn btn-primary"
+														</select>
+														<button class="btn btn-primary"
 															th:onclick="'javascript:updateStudentGrade(\'' + ${courseStudent.courseId} + '\', \'' + ${courseStudent.studentId} + '\');'"
-															th:text="#{course.button.save}"></a></td>
+															th:text="#{course.button.save}"></button></td>
 												</tr>
 											</th:block>
 										</tbody>
@@ -156,7 +157,7 @@
 			function updateStudentGrade(courseId, studentId) {
 				$.ajax({
 					type : 'POST',
-					url : "/api-gateway/course/courseStudent",
+					url : "/api-gateway/course/courseStudent/update",
 					data: {
 						"gradeId": $("#grades" + courseId).val(),
 						"courseId": courseId,

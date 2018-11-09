@@ -15,6 +15,7 @@ import com.university.constant.RequestConstant;
 import com.university.constant.ResponseStatus;
 import com.university.constant.Role;
 import com.university.entity.Course;
+import com.university.entity.CourseStudent;
 import com.university.entity.Grade;
 import com.university.filter.CourseFilter;
 import com.university.response.CourseResponse;
@@ -84,6 +85,18 @@ public class CourseController {
 	public void changeStudentGrade(@RequestParam int gradeId, @RequestParam long courseId,
 			@RequestParam long studentId) {
 		courseStudentService.updateCourseStudentByCourseIdandStudentId(gradeId, courseId, studentId);
+	}
+
+	@PostMapping(RequestConstant.COURSESTUDENT_INSERT)
+	public boolean insertCourseStudent(@RequestParam String courseId, @RequestParam String studentId) {
+		if (!StringUtils.isNumeric(courseId) || !StringUtils.isNumeric(studentId)) {
+			return false;
+		}
+		CourseStudent courseStudent = new CourseStudent();
+		courseStudent.setCourseId(Long.parseLong(courseId));
+		courseStudent.setStudentId(Long.parseLong(studentId));
+		courseStudentService.addCourseStudent(courseStudent);
+		return true;
 	}
 
 }

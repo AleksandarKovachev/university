@@ -16,8 +16,10 @@ public class RequestConstant {
 
 	public static final String GRADES = "/course/grades";
 
-	public static final String COURSESTUDENT_UPDATE = "/course/courseStudent";
+	public static final String COURSESTUDENT_UPDATE = "/course/courseStudent/update";
 
 	public static final String COURSES = "/course/courses";
+
+	public static final String COURSESTUDENT_INSERT = "/course/courseStudent/insert";
 
 }
