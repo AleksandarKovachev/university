@@ -1,5 +1,6 @@
 package com.university.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -15,10 +16,12 @@ import com.university.constant.RequestConstant;
 import com.university.constant.ResponseStatus;
 import com.university.constant.Role;
 import com.university.entity.Course;
+import com.university.entity.CourseAttendance;
 import com.university.entity.CourseStudent;
 import com.university.entity.Grade;
 import com.university.filter.CourseFilter;
 import com.university.response.CourseResponse;
+import com.university.service.CourseAttendanceService;
 import com.university.service.CourseService;
 import com.university.service.CourseStudentService;
 import com.university.service.GradeService;
@@ -40,6 +43,9 @@ public class CourseController {
 
 	@Autowired
 	private CourseStudentService courseStudentService;
+
+	@Autowired
+	private CourseAttendanceService courseAttendanceService;
 
 	@GetMapping(RequestConstant.COURSE_GET)
 	public CourseResponse getCourses(@ModelAttribute CourseFilter filter) {
@@ -96,6 +102,20 @@ public class CourseController {
 		courseStudent.setCourseId(Long.parseLong(courseId));
 		courseStudent.setStudentId(Long.parseLong(studentId));
 		courseStudentService.addCourseStudent(courseStudent);
+		return true;
+	}
+
+	@PostMapping(RequestConstant.COURSE_ATTENDANCE_INSERT)
+	public boolean insertCourseAttendance(@RequestParam String courseId, @RequestParam String studentId,
+			@RequestParam Date attendance) {
+		if (!StringUtils.isNumeric(courseId) || !StringUtils.isNumeric(studentId)) {
+			return false;
+		}
+		CourseAttendance courseAttendance = new CourseAttendance();
+		courseAttendance.setCourseId(Long.parseLong(courseId));
+		courseAttendance.setStudentId(Long.parseLong(studentId));
+		courseAttendance.setAttendance(attendance);
+		courseAttendanceService.addCourseAttendance(courseAttendance);
 		return true;
 	}
 

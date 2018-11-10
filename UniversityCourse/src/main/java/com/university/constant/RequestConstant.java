@@ -22,4 +22,6 @@ public class RequestConstant {
 
 	public static final String COURSESTUDENT_INSERT = "/course/courseStudent/insert";
 
+	public static final String COURSE_ATTENDANCE_INSERT = "/course/courseAttendance/insert";
+
 }
