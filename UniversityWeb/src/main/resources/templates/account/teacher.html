@@ -88,7 +88,22 @@
 																th:if="${courseAttendance.studentId == courseStudent.student.id}"
 																th:text="${#dates.format(courseAttendance.attendance, 'dd-MMMM-yyyy HH:mm:ss')}">
 															</p>
-														</th:block></td>
+														</th:block>
+														<div class="container">
+															<div class="row">
+																<div class='col-sm-6'>
+																	<div class='input-group date'
+																		th:id="'datetime' + ${courseStudent.studentId}">
+																		<input type='text' class="form-control" />
+																	</div>
+																</div>
+																<div class='col-sm-6'>
+																	<button class="btn btn-primary"
+																		th:onclick="'javascript:insertStudentAttendance(\'' + ${courseStudent.courseId} + '\', \'' + ${courseStudent.studentId} + '\');'"
+																		th:text="#{course.button.save}"></button>
+																</div>
+															</div>
+														</div></td>
 													<td th:if="${courseStudent.grade != null}"
 														th:text="${courseStudent.grade.name + ' ' + courseStudent.grade.value}"></td>
 													<td th:if="${courseStudent.grade == null}"><select
@@ -136,6 +151,9 @@
 	<section layout:fragment="js">
 		<script th:inline="javascript">
 			$(document).ready(function() {
+				$('date').datetimepicker({
+					locale: 'bg'
+				});
 
 				if($("#grades")) {
 					$('select').selectpicker();
@@ -160,6 +178,21 @@
 					url : "/api-gateway/course/courseStudent/update",
 					data: {
 						"gradeId": $("#grades" + courseId).val(),
+						"courseId": courseId,
+						"studentId": studentId
+					},
+					success : function(response) {
+						$('#myModal').modal()
+					}
+				});
+			}
+
+			function insertStudentAttendance(courseId, studentId) {
+				$.ajax({
+					type : 'POST',
+					url : "/api-gateway/course/courseAttendance/insert",
+					data: {
+						"attendance": $("#datetime" + studentId).val(),
 						"courseId": courseId,
 						"studentId": studentId
 					},
