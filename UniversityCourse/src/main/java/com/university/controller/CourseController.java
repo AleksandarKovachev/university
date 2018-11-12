@@ -1,6 +1,7 @@
 package com.university.controller;
 
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -107,14 +108,20 @@ public class CourseController {
 
 	@PostMapping(RequestConstant.COURSE_ATTENDANCE_INSERT)
 	public boolean insertCourseAttendance(@RequestParam String courseId, @RequestParam String studentId,
-			@RequestParam Date attendance) {
+			@RequestParam String attendance) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		try {
+			simpleDateFormat.parse(attendance);
+		} catch (ParseException e) {
+			return false;
+		}
 		if (!StringUtils.isNumeric(courseId) || !StringUtils.isNumeric(studentId)) {
 			return false;
 		}
 		CourseAttendance courseAttendance = new CourseAttendance();
 		courseAttendance.setCourseId(Long.parseLong(courseId));
 		courseAttendance.setStudentId(Long.parseLong(studentId));
-		courseAttendance.setAttendance(attendance);
+		courseAttendance.setAttendance(simpleDateFormat.parse(attendance));
 		courseAttendanceService.addCourseAttendance(courseAttendance);
 		return true;
 	}

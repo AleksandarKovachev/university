@@ -91,13 +91,13 @@
 														</th:block>
 														<div class="container">
 															<div class="row">
-																<div class='col-sm-6'>
-																	<div class='input-group date'
-																		th:id="'datetime' + ${courseStudent.studentId}">
-																		<input type='text' class="form-control" />
+																<div class='col-sm-8'>
+																	<div class='input-group date'>
+																		<input type='text' class="form-control"
+																			th:id="'datetime' + ${courseStudent.studentId}" />
 																	</div>
 																</div>
-																<div class='col-sm-6'>
+																<div class='col-sm-2'>
 																	<button class="btn btn-primary"
 																		th:onclick="'javascript:insertStudentAttendance(\'' + ${courseStudent.courseId} + '\', \'' + ${courseStudent.studentId} + '\');'"
 																		th:text="#{course.button.save}"></button>
@@ -151,7 +151,7 @@
 	<section layout:fragment="js">
 		<script th:inline="javascript">
 			$(document).ready(function() {
-				$('date').datetimepicker({
+				$('[id^=datetime]').datetimepicker({
 					locale: 'bg'
 				});
 
@@ -188,7 +188,7 @@
 			}
 
 			function insertStudentAttendance(courseId, studentId) {
-				$.ajax({
+				 $.ajax({
 					type : 'POST',
 					url : "/api-gateway/course/courseAttendance/insert",
 					data: {
