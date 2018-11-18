@@ -1,12 +1,12 @@
 package com.university.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
+import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
@@ -20,6 +20,7 @@ import com.university.constant.Role;
 import com.university.constant.ViewConstant;
 import com.university.dto.Account;
 import com.university.dto.Course;
+import com.university.feignclient.GatewayClient;
 import com.university.response.AccountResponse;
 
 /**
@@ -32,41 +33,32 @@ import com.university.response.AccountResponse;
 public class AccountController {
 
 	@Autowired
-	private KeycloakRestTemplate restTemplate;
+	private GatewayClient gatewayClient;
 
 	@GetMapping(RequestConstant.ACCOUNT)
-	public ModelAndView account(@PathVariable String username) {
+	public ModelAndView account(@PathVariable String username, KeycloakAuthenticationToken keycloakPrincipal) {
 		ModelMap modelMap = new ModelMap();
 
-		StringBuilder accountUrl = new StringBuilder("http://api-gateway/").append(username);
-		ResponseEntity<Account> accountResponse = restTemplate.getForEntity(accountUrl.toString(), Account.class);
+		String token = ((KeycloakSecurityContext) keycloakPrincipal.getCredentials()).getTokenString();
 
-		if (accountResponse.hasBody()) {
-			Account account = accountResponse.getBody();
-			StringBuilder courseUrl = new StringBuilder("http://api-gateway/course/account/").append(account.getId())
-					.append("?roleId=").append(account.getRoleId());
-			ResponseEntity<List<Course>> coursesResponse = restTemplate.exchange(courseUrl.toString(), HttpMethod.GET,
-					null, new ParameterizedTypeReference<List<Course>>() {
-					});
-
+		Account account = gatewayClient.account(username);
+		if (account != null) {
 			modelMap.addAttribute(RequestAttribute.ACCOUNT, account);
 
-			if (coursesResponse.hasBody() && !CollectionUtils.isEmpty(coursesResponse.getBody())) {
-				List<Course> courses = coursesResponse.getBody();
+			List<Course> courses = gatewayClient.accountCourses("Bearer " + token, account.getId(),
+					account.getRoleId());
+			if (!CollectionUtils.isEmpty(courses)) {
 				if (account.getRoleId().equals(Role.TEACHER.getId())) {
-					StringBuilder studentUrl = new StringBuilder("http://api-gateway/students/id");
-
+					List<Long> listOfStudentId = new ArrayList<>();
 					courses.stream().forEach(course -> {
 						course.setTeacher(account);
-						course.getCourseStudents().stream().forEach(courseStudents -> addQueryParameter(studentUrl,
-								"studentId", courseStudents.getStudentId()));
+						course.getCourseStudents().stream()
+								.forEach(courseStudents -> listOfStudentId.add(courseStudents.getStudentId()));
 					});
 
-					ResponseEntity<AccountResponse> studentResponse = restTemplate.getForEntity(studentUrl.toString(),
-							AccountResponse.class);
-
-					if (studentResponse.hasBody()) {
-						List<Account> accounts = studentResponse.getBody().getAccounts();
+					AccountResponse students = gatewayClient.students(listOfStudentId);
+					if (students != null) {
+						List<Account> accounts = students.getAccounts();
 						courses.stream()
 								.forEach(course -> course.getCourseStudents().stream()
 										.forEach(courseStudent -> courseStudent.setStudent(accounts.stream()
@@ -76,16 +68,11 @@ public class AccountController {
 					modelMap.addAttribute(RequestAttribute.COURSES, courses);
 					return new ModelAndView(ViewConstant.ACCOUNT_TEACHER, modelMap);
 				} else {
-					StringBuilder teachersUrl = new StringBuilder("http://api-gateway/teachers/id");
-
-					courses.stream()
-							.forEach(course -> addQueryParameter(teachersUrl, "teacherId", course.getTeacherId()));
-
-					ResponseEntity<AccountResponse> teachersResponse = restTemplate.getForEntity(teachersUrl.toString(),
-							AccountResponse.class);
-
-					if (teachersResponse.hasBody()) {
-						List<Account> accounts = teachersResponse.getBody().getAccounts();
+					List<Long> listOfTeacherId = courses.stream().map(course -> course.getTeacherId())
+							.collect(Collectors.toList());
+					AccountResponse teachersResponse = gatewayClient.teachers(listOfTeacherId);
+					if (teachersResponse != null) {
+						List<Account> accounts = teachersResponse.getAccounts();
 
 						courses.stream().forEach(course -> course.setTeacher(accounts.stream()
 								.filter(a -> a.getId().equals(course.getTeacherId())).findFirst().orElse(null)));
@@ -96,19 +83,6 @@ public class AccountController {
 			}
 		}
 		return new ModelAndView(ViewConstant.ACCOUNT_STUDENT, modelMap);
-	}
-
-	private void addQueryParameter(StringBuilder url, String name, Object value) {
-		appendPrefix(url);
-		url.append(name).append("=").append(value);
-	}
-
-	private void appendPrefix(StringBuilder url) {
-		if (url.toString().contains("?")) {
-			url.append("&");
-		} else {
-			url.append("?");
-		}
 	}
 
 }
