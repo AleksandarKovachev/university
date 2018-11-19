@@ -58,7 +58,8 @@
 										</tr>
 									</th:block>
 								</table></td>
-							<td th:text="${account.grade.name + ' ' + account.grade.value}"></td>
+							<td><span th:if="${account.grade != null}"
+								th:text="${account.grade.name + ' ' + account.grade.value}"></span></td>
 						</tr>
 					</th:block>
 				</tbody>
