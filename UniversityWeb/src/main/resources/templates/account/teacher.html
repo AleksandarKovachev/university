@@ -5,6 +5,17 @@
 	layout:decorate="~{/layout/BaseLayout}">
 <head>
 <title th:text="${account.firstName + ' ' + account.lastName}"></title>
+<style>
+.bootstrap-datetimepicker-widget td.day {
+	width: 200px;
+	line-height: 10px;
+	font-size: 10px;
+}
+
+th.dow {
+	font-size: 12px;
+}
+</style>
 </head>
 <body>
 	<section layout:fragment="body">
@@ -49,16 +60,16 @@
 		<div class="container mt-5" th:if="${not #lists.isEmpty(courses)}">
 			<h1 class="text-center" th:text="#{account.courses}"></h1>
 
-			<table class="table table-hover table-responsive-lg">
+			<table class="table table-bordered table-hover table-responsive-md">
 				<thead class="thead-light">
-					<tr>
+					<tr class="text-center">
 						<th scope="col" th:text="#{table.number}"></th>
 						<th scope="col" th:text="#{course.table.name}"></th>
 						<th scope="col" th:text="#{course.table.attendance}"></th>
 						<th scope="col" th:text="#{account.courses.students}"></th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody class="text-center">
 					<th:block th:each="course, iteration : ${courses}">
 						<tr>
 							<th scope="row" th:text="${iteration.index + 1}"></th>
@@ -68,7 +79,7 @@
 									th:if="${#lists.isEmpty(course.courseStudents)}">
 									0
 								</th:block> <th:block th:if="${not #lists.isEmpty(course.courseStudents)}">
-									<table>
+									<table class="table-sm table-responsive-sm">
 										<thead>
 											<tr>
 												<th scope="col" th:text="#{course.preview.student.name}"></th>
@@ -86,15 +97,16 @@
 															th:each="courseAttendance : ${course.courseAttendance}">
 															<p
 																th:if="${courseAttendance.studentId == courseStudent.student.id}"
-																th:text="${#dates.format(courseAttendance.attendance, 'dd-MMMM-yyyy HH:mm:ss')}">
+																th:text="${#dates.format(courseAttendance.attendance, 'dd/MM/yyyy HH:mm')}">
 															</p>
 														</th:block>
-														<div class="container">
+														<div class="container"
+															th:id="'attendances_' + ${courseStudent.courseId} + '_' + ${courseStudent.studentId}">
 															<div class="row">
 																<div class='col-sm-8'>
 																	<div class='input-group date'>
 																		<input type='text' class="form-control"
-																			th:id="'datetime' + ${courseStudent.studentId}" />
+																			th:id="'datetime_'  + ${courseStudent.courseId} + '_' + ${courseStudent.studentId}" />
 																	</div>
 																</div>
 																<div class='col-sm-2'>
@@ -106,8 +118,9 @@
 														</div></td>
 													<td th:if="${courseStudent.grade != null}"
 														th:text="${courseStudent.grade.name + ' ' + courseStudent.grade.value}"></td>
-													<td th:if="${courseStudent.grade == null}"><select
-															th:id="'grades' + ${courseStudent.courseId}"
+													<td th:if="${courseStudent.grade == null}"
+														th:id="'grade_' + ${courseStudent.courseId} + '_' + ${courseStudent.studentId}"><select
+															th:id="'grades_' + ${courseStudent.courseId} + '_' + ${courseStudent.studentId}"
 															class="selectpicker" data-live-search="true">
 														</select>
 														<button class="btn btn-primary"
@@ -149,10 +162,12 @@
 	</section>
 
 	<section layout:fragment="js">
+
 		<script th:inline="javascript">
 			$(document).ready(function() {
 				$('[id^=datetime]').datetimepicker({
-					locale: 'bg'
+					locale: 'bg',
+					format: 'DD/MM/YYYY HH:mm'
 				});
 
 				if($("#grades")) {
@@ -177,12 +192,13 @@
 					type : 'POST',
 					url : "/api-gateway/course/courseStudent/update",
 					data: {
-						"gradeId": $("#grades" + courseId).val(),
+						"gradeId": $("#grades_" + courseId + "_" + studentId).val(),
 						"courseId": courseId,
 						"studentId": studentId
 					},
 					success : function(response) {
-						$('#myModal').modal()
+						$("#grade_" + courseId + "_" + studentId).html($("#grades_" + courseId + "_" + studentId + " option:selected").text());
+						$('#myModal').modal();
 					}
 				});
 			}
@@ -192,12 +208,14 @@
 					type : 'POST',
 					url : "/api-gateway/course/courseAttendance/insert",
 					data: {
-						"attendance": $("#datetime" + studentId).val(),
+						"attendance": $("#datetime_" + courseId + "_" + studentId).val(),
 						"courseId": courseId,
 						"studentId": studentId
 					},
 					success : function(response) {
-						$('#myModal').modal()
+						$("<p>" + $("#datetime_" + courseId + "_" + studentId).val() + "</p>").insertBefore($("#attendances_" + courseId + "_" + studentId));
+						$("#datetime_" + courseId + "_" + studentId).val("");
+						$('#myModal').modal();
 					}
 				});
 			}

@@ -109,7 +109,7 @@ public class CourseController {
 	@PostMapping(RequestConstant.COURSE_ATTENDANCE_INSERT)
 	public boolean insertCourseAttendance(@RequestParam String courseId, @RequestParam String studentId,
 			@RequestParam String attendance) throws ParseException {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		try {
 			simpleDateFormat.parse(attendance);
 		} catch (ParseException e) {
