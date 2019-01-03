@@ -9,38 +9,46 @@
 <body>
 	<section layout:fragment="body">
 
-		<div class="container mt-5">
+		<div class="container shadow-lg p-3 mb-5 bg-white rounded"
+			style="margin-top: 50px;">
+
 			<div class="row justify-content-md-center">
-				<div class="col-md-auto">
+				<img src="/images/profile-placeholder.png" id="accountImage"
+					class="img-fluid rounded-circle mx-auto d-block"
+					style="max-height: 300px;">
+			</div>
+
+			<div class="row justify-content-md-center">
+				<div class="col col-lg-2">
 					<span th:text="#{account.username}"></span>
 				</div>
-				<div class="col-md-auto">
+				<div class="col col-lg-2">
 					<strong class="text-center" th:text="${account.username}"></strong>
 				</div>
 			</div>
 
 			<div class="row justify-content-md-center">
-				<div class="col-md-auto">
+				<div class="col col-lg-2">
 					<span th:text="#{account.first.name}"></span>
 				</div>
-				<div class="col-md-auto">
+				<div class="col col-lg-2">
 					<strong class="text-center" th:text="${account.firstName}"></strong>
 				</div>
 			</div>
 
 			<div class="row justify-content-md-center">
-				<div class="col-md-auto">
+				<div class="col col-lg-2">
 					<span th:text="#{account.last.name}"></span>
 				</div>
-				<div class="col-md-auto">
+				<div class="col col-lg-2">
 					<strong class="text-center" th:text="${account.lastName}"></strong>
 				</div>
 			</div>
 			<div class="row justify-content-md-center">
-				<div class="col-md-auto">
+				<div class="col col-lg-2">
 					<span th:text="#{account.email}"></span>
 				</div>
-				<div class="col-md-auto">
+				<div class="col col-lg-2">
 					<strong class="text-center" th:text="${account.email}"></strong>
 				</div>
 			</div>
@@ -111,6 +119,17 @@
 				</th:block>
 			</div>
 		</div>
+	</section>
+	<section layout:fragment="js">
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				var accountImage = /*[[${account.image}]]*/;
+				if(accountImage) {
+					var decodedImage = btoa(accountImage);
+					$("#accountImage").attr("src", "data:image/png;base64," + decodedImage);
+				};
+			});
+		</script>
 	</section>
 </body>
 </html>

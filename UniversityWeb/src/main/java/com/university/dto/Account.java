@@ -29,4 +29,6 @@ public class Account {
 
 	private Integer roleId;
 
+	private String image;
+
 }

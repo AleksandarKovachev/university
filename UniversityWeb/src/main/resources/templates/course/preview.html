@@ -54,7 +54,7 @@
 									<th:block th:each="attendance : ${course.courseAttendance}">
 										<tr>
 											<td
-												th:text="${#dates.format(attendance.attendance, 'dd-MMMM-yyyy HH:mm:ss')}"></td>
+												th:text="${#dates.format(attendance.attendance, 'dd/MM/yyyy HH:mm')}"></td>
 										</tr>
 									</th:block>
 								</table></td>

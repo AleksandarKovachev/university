@@ -7,7 +7,11 @@
 
 <div th:fragment="header">
 	<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
-		<a class="navbar-brand" th:href="@{/}" th:text="#{logo}"></a>
+		<a class="navbar-brand" th:href="@{/}">
+			<img
+				src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Tu-sofia-logo.svg"
+				style="max-width: 50px;"> [[#{logo}]]
+		</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navBar" aria-controls="navBar" aria-expanded="false"
 			aria-label="Toggle navigation">

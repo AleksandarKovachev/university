@@ -47,4 +47,7 @@ public class Account implements Serializable {
 	@Column
 	private Integer roleId;
 
+	@Column
+	private String image;
+
 }
