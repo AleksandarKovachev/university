@@ -18,4 +18,6 @@ public class RequestConstant {
 
 	public static final String ACCOUNT = "/{username}";
 
+	public static final String ACCOUNT_IMAGE = "/account/image/{accountId}";
+
 }

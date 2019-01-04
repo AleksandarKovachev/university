@@ -13,9 +13,18 @@
 			style="margin-top: 50px;">
 
 			<div class="row justify-content-md-center">
-				<img src="/images/profile-placeholder.png" id="accountImage"
-					class="img-fluid rounded-circle mx-auto d-block"
-					style="max-height: 300px;">
+				<form enctype="multipart/form-data" id="updateImage">
+					<img
+						th:src="${#strings.isEmpty(account.image) ? '/images/profile-placeholder.png' : 'data:image/png;base64,' + account.image}"
+						id="accountImage" class="img-fluid rounded-circle mx-auto d-block"
+						style="max-height: 300px;">
+					<input type="file" hidden="true" accept="image/*"
+						id="accountImageBtn" name="accountImage" />
+					<input class="btn update" type="button" id="updateAccountImageBtn"
+						th:value="#{account.image.update}" />
+					<input class="btn delete" type="button"
+						th:value="#{account.image.delete}" />
+				</form>
 			</div>
 
 			<div class="row justify-content-md-center">
@@ -123,11 +132,35 @@
 	<section layout:fragment="js">
 		<script th:inline="javascript">
 			$(document).ready(function() {
-				var accountImage = /*[[${account.image}]]*/;
-				if(accountImage) {
-					var decodedImage = btoa(accountImage);
-					$("#accountImage").attr("src", "data:image/png;base64," + decodedImage);
-				};
+				var tokenValue = /*[[${#authentication.details.keycloakSecurityContext.tokenString}]]*/;
+				var accoundId = /*[[${account.keycloakId}]]*/;
+				
+				$("#updateAccountImageBtn").click(function() {
+					$("#accountImageBtn").trigger('click');
+				});
+
+				$("#accountImageBtn").change(function() {
+					if($("#accountImageBtn").val()) {
+						$("#updateImage").submit();
+					}
+				});
+
+				$("#updateImage").ajaxForm({
+				 	type : 'POST',
+				 	url : "/api-gateway/account/image/" + accoundId,
+					timeout: 30000,
+					headers: {
+		    	        'Authorization': 'Bearer ' + tokenValue
+	    	        },
+					success : function(response) {
+						var reader = new FileReader();
+    	                reader.onload = function (e) {
+    	                   $('#accountImage').attr('src', e.target.result);
+    	                }
+    	               reader.readAsDataURL($("#accountImageBtn")[0].files[0]);
+    	               $("#accountImageBtn").val("");
+					}
+			 });
 			});
 		</script>
 	</section>

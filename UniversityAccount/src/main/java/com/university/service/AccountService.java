@@ -37,4 +37,12 @@ public class AccountService {
 		return accountRepository.findAccountByUsername(username);
 	}
 
+	public Account findAccountByKeycloakId(String keycloakId) {
+		return accountRepository.findAccountByKeycloakId(keycloakId);
+	}
+
+	public Account save(Account account) {
+		return accountRepository.save(account);
+	}
+
 }

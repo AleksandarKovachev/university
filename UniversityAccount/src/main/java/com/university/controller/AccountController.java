@@ -1,13 +1,21 @@
 package com.university.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.university.constant.RequestConstant;
 import com.university.constant.ResponseStatus;
@@ -66,6 +74,31 @@ public class AccountController {
 			return null;
 		}
 		return accountService.findAccountByUsername(username);
+	}
+
+	@PostMapping(RequestConstant.ACCOUNT_IMAGE)
+	public ResponseEntity<Void> accountImage(@PathVariable String accountId,
+			@ModelAttribute("accountImage") MultipartFile accountImage) {
+		if (accountImage == null || accountImage.isEmpty()) {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			Account account = accountService.findAccountByKeycloakId(accountId);
+			account.setImage(Base64Utils.encodeToString(accountImage.getBytes()));
+			accountService.save(account);
+		} catch (IOException e) {
+		}
+
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	@DeleteMapping(RequestConstant.ACCOUNT_IMAGE)
+	public ResponseEntity<Void> accountImage(@PathVariable String accountId) {
+		Account account = accountService.findAccountByKeycloakId(accountId);
+		account.setImage(null);
+		accountService.save(account);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 }

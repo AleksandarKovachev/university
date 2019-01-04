@@ -81,7 +81,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 			.authorizeRequests().anyRequest().permitAll()
 			.antMatchers(RequestConstant.STUDENTS_BY_ID).authenticated()
 			.antMatchers(RequestConstant.TEACHERS_BY_ID).authenticated()
-			.antMatchers(RequestConstant.ACCOUNT).authenticated();
+			.antMatchers(RequestConstant.ACCOUNT).authenticated()
+			.antMatchers(RequestConstant.ACCOUNT_IMAGE).authenticated();
 	}// @formatter:on
 
 }
