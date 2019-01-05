@@ -13,18 +13,21 @@
 			style="margin-top: 50px;">
 
 			<div class="row justify-content-md-center">
-				<form enctype="multipart/form-data" id="updateImage">
-					<img
-						th:src="${#strings.isEmpty(account.image) ? '/images/profile-placeholder.png' : 'data:image/png;base64,' + account.image}"
-						id="accountImage" class="img-fluid rounded-circle mx-auto d-block"
-						style="max-height: 300px;">
-					<input type="file" hidden="true" accept="image/*"
-						id="accountImageBtn" name="accountImage" />
-					<input class="btn update" type="button" id="updateAccountImageBtn"
-						th:value="#{account.image.update}" />
-					<input class="btn delete" type="button"
-						th:value="#{account.image.delete}" />
-				</form>
+				<div class="show-image">
+					<form enctype="multipart/form-data" id="updateImage">
+						<img
+							th:src="${#strings.isEmpty(account.image) ? '/images/profile-placeholder.png' : 'data:image/png;base64,' + account.image}"
+							id="accountImage"
+							class="img-fluid rounded-circle mx-auto d-block"
+							style="max-height: 300px;">
+						<input type="file" hidden="true" accept="image/*"
+							id="accountImageBtn" name="accountImage" />
+						<input class="btn update" type="button" id="updateAccountImageBtn"
+							th:value="#{account.image.update}" />
+						<input class="btn delete" type="button" id="deleteAccountImage"
+							th:value="#{account.image.delete}" />
+					</form>
+				</div>
 			</div>
 
 			<div class="row justify-content-md-center">
@@ -74,7 +77,8 @@
 						<th scope="col" th:text="#{account.course.teacher}"></th>
 						<th scope="col" th:text="#{course.table.attendance}"></th>
 						<th scope="col" th:text="#{course.table.students.count}"></th>
-						<th scope="col" th:text="#{course.table.grade}"></th>
+						<th th:if="${#authentication.name == account.username}"
+							scope="col" th:text="#{course.table.grade}"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -82,11 +86,12 @@
 						<tr>
 							<th scope="row" th:text="${iteration.index + 1}"></th>
 							<td th:text="${course.name}"></td>
-							<td
-								th:text="${course.teacher.firstName + ' ' + course.teacher.lastName}"></td>
+							<td><a th:href="${course.teacher.username}"
+									th:text="${course.teacher.firstName + ' ' + course.teacher.lastName}"></a></td>
 							<td th:text="${course.attendance}"></td>
 							<td th:text="${#lists.size(course.courseStudents)}"></td>
-							<th:block th:each="courseStudent : ${course.courseStudents}">
+							<th:block th:each="courseStudent : ${course.courseStudents}"
+								th:if="${#authentication.name == account.username}">
 								<td
 									th:if="${courseStudent.studentId == account.id && courseStudent.grade != null}"
 									th:text="${courseStudent.grade.name + ' ' + courseStudent.grade.value}"></td>
@@ -96,7 +101,8 @@
 				</tbody>
 			</table>
 
-			<div th:if="${not #lists.isEmpty(courses)}">
+			<div
+				th:if="${not #lists.isEmpty(courses) && #authentication.name == account.username}">
 				<h1 class="text-center" th:text="#{course.preview.attendance}"></h1>
 
 				<th:block th:each="course, iteration : ${courses}">

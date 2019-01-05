@@ -82,15 +82,17 @@ public class CourseController {
 
 			Course course = gatewayClient.course("Bearer " + token, id);
 			if (course != null) {
-				AccountResponse accountsResponse = gatewayClient.students(
-						course.getCourseStudents().stream().map(c -> c.getStudentId()).collect(Collectors.toList()));
+				if (!CollectionUtils.isEmpty(course.getCourseStudents())) {
+					AccountResponse accountsResponse = gatewayClient.students(course.getCourseStudents().stream()
+							.map(c -> c.getStudentId()).collect(Collectors.toList()));
 
-				if (accountsResponse != null) {
-					List<Account> accounts = accountsResponse.getAccounts();
-					course.getCourseStudents().stream()
-							.forEach(courseStudent -> courseStudent.setStudent(accounts.stream()
-									.filter(account -> account.getId().equals(courseStudent.getStudentId())).findFirst()
-									.orElse(null)));
+					if (accountsResponse != null) {
+						List<Account> accounts = accountsResponse.getAccounts();
+						course.getCourseStudents().stream()
+								.forEach(courseStudent -> courseStudent.setStudent(accounts.stream()
+										.filter(account -> account.getId().equals(courseStudent.getStudentId()))
+										.findFirst().orElse(null)));
+					}
 				}
 
 				AccountResponse teachersResponse = gatewayClient.teachers(Arrays.asList(course.getTeacherId()));
@@ -99,7 +101,6 @@ public class CourseController {
 					course.setTeacher(accounts.stream().filter(account -> account.getId().equals(course.getTeacherId()))
 							.findFirst().orElse(null));
 				}
-
 				modelMap.put(RequestAttribute.COURSE, course);
 			}
 		}
@@ -109,7 +110,8 @@ public class CourseController {
 	private void setCoursesData(CourseFilter filter, ModelMap modelMap, KeycloakAuthenticationToken keycloakPrincipal) {
 		String token = ((KeycloakSecurityContext) keycloakPrincipal.getCredentials()).getTokenString();
 
-		CourseResponse courseResponse = gatewayClient.getCoursesByFilter("Bearer " + token, filter.getCourseName(), filter.getTeacherId(), filter.getAttendance(), filter.getPageNumber(), filter.getPageSize());
+		CourseResponse courseResponse = gatewayClient.getCoursesByFilter("Bearer " + token, filter.getCourseName(),
+				filter.getTeacherId(), filter.getAttendance(), filter.getPageNumber(), filter.getPageSize());
 		if (courseResponse != null && !CollectionUtils.isEmpty(courseResponse.getCourses())) {
 			List<Course> courses = courseResponse.getCourses();
 

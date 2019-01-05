@@ -75,7 +75,8 @@
 						<th scope="col" th:text="#{table.number}"></th>
 						<th scope="col" th:text="#{course.table.name}"></th>
 						<th scope="col" th:text="#{course.table.attendance}"></th>
-						<th scope="col" th:text="#{account.courses.students}"></th>
+						<th th:if="${#authentication.name == account.username}"
+							scope="col" th:text="#{account.courses.students}"></th>
 					</tr>
 				</thead>
 				<tbody class="text-center">
@@ -84,7 +85,7 @@
 							<th scope="row" th:text="${iteration.index + 1}"></th>
 							<td th:text="${course.name}"></td>
 							<td th:text="${course.attendance}"></td>
-							<td><th:block
+							<td th:if="${#authentication.name == account.username}"><th:block
 									th:if="${#lists.isEmpty(course.courseStudents)}">
 									0
 								</th:block> <th:block th:if="${not #lists.isEmpty(course.courseStudents)}">
@@ -100,8 +101,8 @@
 										<tbody>
 											<th:block th:each="courseStudent : ${course.courseStudents}">
 												<tr>
-													<td
-														th:text="${courseStudent.student.firstName + ' ' + courseStudent.student.lastName}"></td>
+													<td><a th:href="${courseStudent.student.username}"
+															th:text="${courseStudent.student.firstName + ' ' + courseStudent.student.lastName}"></a></td>
 													<td class="text-center"><th:block
 															th:each="courseAttendance : ${course.courseAttendance}">
 															<p
