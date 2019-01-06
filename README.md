@@ -10,3 +10,5 @@ Spring Boot Microservices with Keycloak as an authorization server, Consul as a 
 ![alt tag](https://github.com/AleksandarKovachev/university/blob/master/images/3.PNG)
 
 ![alt tag](https://github.com/AleksandarKovachev/university/blob/master/images/4.PNG)
+
+![alt tag](https://github.com/AleksandarKovachev/university/blob/master/images/5.PNG)
